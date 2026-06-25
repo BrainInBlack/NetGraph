@@ -1,0 +1,154 @@
+@use '../variables' as *;
+
+#connections {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  // SVG roots default to overflow:hidden, which clips anything routed through
+  // negative canvas coords. Devices can sit anywhere on the infinite canvas,
+  // so let the SVG paint outside its declared bounds.
+  overflow: visible;
+}
+
+.conn-group {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.conn-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 14px;
+}
+
+.conn-line {
+  fill: none;
+  stroke-width: 2.5px;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+}
+
+.conn-wired {
+  stroke: rgb(50, 80, 120);
+}
+
+.conn-wireless {
+  stroke: rgb(50, 80, 120);
+  stroke-dasharray: 8 5;
+}
+
+.conn-line.conn-collision {
+  stroke: $status-warning;
+  stroke-dasharray: 4 3;
+}
+
+// Ghost preview during connect mode — straight line from anchor to cursor
+// (or to a hovered target's center). Pure visual, no interaction.
+.conn-ghost {
+  fill: none;
+  stroke: rgba(140, 200, 240, 0.55);
+  stroke-width: 2px;
+  stroke-dasharray: 6 5;
+  stroke-linecap: round;
+  pointer-events: none;
+  transition: stroke 0.1s;
+}
+
+// Hovering a device that's already connected to the anchor — paint the
+// ghost in the warning color so the user sees the commit will be a no-op.
+.conn-ghost.conn-ghost-duplicate {
+  stroke: rgba(225, 170, 90, 0.55);
+}
+
+.conn-group:hover .conn-line,
+.conn-group.active .conn-line {
+  stroke: rgb(110, 165, 220);
+}
+
+// Hover must not override the warning — users need to see it to act on it.
+.conn-group:hover .conn-line.conn-collision,
+.conn-group.active .conn-line.conn-collision {
+  stroke: $status-warning;
+}
+
+.conn-label {
+  font-family: $font-stack;
+  font-size: 13px;
+  font-weight: 600;
+  fill: rgb(200, 215, 240);
+  filter: url(#conn-label-halo);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  user-select: none;
+}
+
+.conn-group:hover .conn-label,
+.conn-group.active .conn-label {
+  opacity: 1;
+}
+
+// ── Hover action buttons (Edit / Delete) ─────────────────────
+//
+// Live inside an SVG <foreignObject> centered above the label anchor. Only
+// visible in connect mode AND while the connection is hovered. Pointer-events
+// flips with visibility so the foreignObject doesn't block hits on the line
+// when invisible.
+
+.conn-actions {
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+
+  // Default-hidden — the only way to see them is to be in connect mode AND
+  // hovering. Outside connect mode the buttons should never appear.
+  display: none;
+}
+
+#app.connect-mode-on .conn-actions {
+  display: block;
+}
+
+#app.connect-mode-on .conn-group:hover .conn-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.conn-actions-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+.conn-action-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: 50%;
+  color: $text;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background $dur-fast, color $dur-fast, border-color $dur-fast;
+
+  &:hover {
+    background: $bg-raised;
+    border-color: rgba(100, 160, 220, 0.6);
+    color: rgb(160, 210, 245);
+  }
+
+  &.conn-action-danger:hover {
+    border-color: rgba(210, 100, 100, 0.65);
+    color: rgb(230, 130, 130);
+  }
+}

@@ -1,0 +1,209 @@
+@use '../variables' as *;
+
+#device-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+// ── Base card ─────────────────────────────────────────────────
+
+.device {
+  pointer-events: auto;
+  position: absolute;
+  transform: translateX(-50%);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  width: 204px;
+  background: $bg-surface;
+  border: 2.5px solid $border;
+  border-radius: $radius-card;
+  overflow: hidden;
+  // No `transform` in the transition: these cards sit inside #canvas-transform,
+  // which is CSS-`scale()`d for zoom. Animating a card's transform forced WebKit
+  // to re-rasterize the whole scaled parent (every other card) into one texture,
+  // blurring sibling text on 1x/non-Retina displays during the transition.
+  // Hover/selected feedback is the border-color tint + selected glow below — no
+  // lift, so nothing animates transform inside the scaled layer.
+  transition: box-shadow $dur-fast, border-color $dur-fast;
+
+  &.conn-highlight {
+    filter: brightness(1.35);
+  }
+}
+
+// ── Per-type borders, hover, selected ─────────────────────────
+
+@each $type, $color in $device-colors {
+  .device.#{$type} {
+    border-color: rgba($color, 0.55);
+
+    .device-icon { border-color: rgba($color, 0.35); }
+    .device-ip   { color: $color; }
+  }
+
+  .device.#{$type}:hover {
+    border-color: $color;
+  }
+
+  .device.#{$type}.selected {
+    border-color: $color;
+    box-shadow: 0 0 28px 4px rgba($color, 0.5);
+  }
+}
+
+// ── Card header ───────────────────────────────────────────────
+
+.device-header {
+  padding: 11px 12px 10px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.device-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: $bg-raised;
+  border: 1.5px solid $border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: $text;
+  overflow: hidden;
+
+  > svg {
+    width: 18px;
+    height: 18px;
+  }
+  > img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+}
+
+.device-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.device-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+
+.device-type {
+  font-size: 10px;
+  color: $text-dim;
+  margin-top: 2px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// ── Host indicator (VMs/containers on a parent) ───────────────
+
+.device-host {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: $text-dim;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.device-host-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+// ── Card meta (IP + domain) ──────────────────────────────────
+
+.device-meta {
+  padding: 7px 12px 8px;
+  border-top: 1px solid $border;
+}
+
+.device-addr {
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.device-port {
+  font-size: 11px;
+  color: $text-dim;
+}
+
+.device-domain {
+  font-size: 11px;
+  color: $text-dim;
+  margin-top: 4px;
+}
+
+// ── Card footer (tags) ──────────────────────────────────────
+
+.device-footer {
+  padding: 7px 12px 9px;
+  border-top: 1px solid $border;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+// ── Wide layout ──────────────────────────────────────────────
+//
+// When a card's width is bumped above the default, switch from a stacked
+// (header → meta → footer) layout to a side-by-side one where the IP/domain
+// sit to the right of the name/type, right-aligned. The footer stays full-width
+// below.
+.device.wide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "header meta"
+    "footer footer";
+
+  .device-header { grid-area: header; }
+  .device-meta {
+    grid-area: meta;
+    border-top: none;
+    border-left: 1px solid $border;
+    padding: 11px 14px 10px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  .device-addr { justify-content: flex-end; }
+  .device-domain { margin-top: 0; }
+  .device-footer { grid-area: footer; }
+}
+
+.device-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.dtag {
+  font-size: 10px;
+  color: $text-dim;
+  letter-spacing: 0.03em;
+}

@@ -1,0 +1,93 @@
+@use '../variables' as *;
+
+// Bottom-right toolbar — connect-mode toggle + zoom bar, side by side.
+#bottom-bar {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#zoom-bar {
+  display: flex;
+  align-items: center;
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $radius-pill;
+  overflow: hidden;
+  height: $bar-height;
+}
+
+.zoom-btn {
+  width: $bar-height;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  font-size: 18px;
+  font-family: inherit;
+  transition: background $dur-fast, color $dur-fast;
+  flex-shrink: 0;
+
+  &:hover {
+    background: $bg-raised;
+    color: $text;
+  }
+}
+
+.zoom-divider {
+  width: 1px;
+  height: 22px;
+  background: $border;
+  flex-shrink: 0;
+}
+
+// Zoom-level pill: shows percentage normally, swaps to "Fit" on hover.
+// Whole area is the click target; clicking triggers fitToContent().
+#zoom-level {
+  position: relative;
+  height: 100%;
+  // Pin width so the bar doesn't reflow between "400%" and "Fit"
+  min-width: 64px;
+  padding: 0 14px;
+  background: none;
+  border: none;
+  color: $text;
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background $dur-fast;
+
+  &:hover {
+    background: $bg-raised;
+  }
+
+  .zoom-level-value,
+  .zoom-level-fit {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity $dur-fast;
+  }
+  .zoom-level-fit {
+    opacity: 0;
+    color: $text-muted;
+  }
+  &:hover .zoom-level-value {
+    opacity: 0;
+  }
+  &:hover .zoom-level-fit {
+    opacity: 1;
+    color: $text;
+  }
+}

@@ -1,0 +1,92 @@
+name: Bug report
+description: Something in NetGraph doesn't work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please don't report security
+        issues here — see the [security policy](../blob/main/.github/SECURITY.md)
+        for private reporting.
+
+        NetGraph stores everything in your browser's `localStorage`. If the app
+        won't load at all, a corrupt saved state is a common cause — exporting a
+        bundle (map dropdown → Export) before you try anything destructive is a
+        good idea.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+      placeholder: |
+        I dragged a device onto another card and ...
+        I expected ... but ...
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The exact steps to trigger it, starting from a fresh load if you can.
+      placeholder: |
+        1. Add two devices
+        2. Connect them
+        3. Drag one on top of the other
+        4. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: NetGraph version
+      description: Shown next to the wordmark in the top-left corner.
+      placeholder: "1.3.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: build
+    attributes:
+      label: Which build are you running?
+      options:
+        - Hosted (netgraph.khemul.de)
+        - Self-hosted (multi-file build)
+        - Offline single-file copy (netgraph.html)
+        - Local dev (npm run dev)
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & version
+      description: e.g. "Firefox 142", "Chrome 141", "Safari 18".
+      placeholder: "Chrome 141"
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - iOS / iPadOS
+        - Android
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      description: Open the browser devtools console (F12) and paste any errors or warnings.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this isn't a duplicate.
+          required: true
+        - label: This is not a security vulnerability (those go through the security policy).
+          required: true

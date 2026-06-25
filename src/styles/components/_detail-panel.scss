@@ -1,0 +1,285 @@
+@use '../variables' as *;
+
+// ── Panel shell ───────────────────────────────────────────────
+
+#detail-panel {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  width: 296px;
+  max-height: calc(100vh - 114px);
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $radius-panel;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -4px 0 32px rgba(0, 0, 0, 0.33);
+  transition: transform $dur-slide $ease-slide, opacity $dur-slide;
+
+  &.hidden {
+    transform: translateX(calc(100% + 32px));
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+// ── Header ────────────────────────────────────────────────────
+
+.panel-header {
+  padding: 16px;
+  border-bottom: 1px solid $border;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.panel-device-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 7px;
+  background: $bg-raised;
+  border: 1.5px solid $border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  color: $text;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  > svg {
+    width: 22px;
+    height: 22px;
+  }
+  > img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+  }
+}
+
+.panel-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.panel-subtitle {
+  font-size: 12px;
+  color: $text-muted;
+  margin-top: 2px;
+}
+
+.panel-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.1s, background 0.1s;
+  flex-shrink: 0;
+
+  &:hover {
+    color: $text;
+    background: $bg-raised;
+  }
+}
+
+// ── Body ──────────────────────────────────────────────────────
+
+.panel-body {
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.prop-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.prop-group-label {
+  font-size: 11px;
+  color: $text-dim;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.prop-key {
+  color: $text-muted;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.prop-val {
+  color: $text;
+  font-size: 13px;
+  text-align: right;
+}
+
+// ── Connections list ──────────────────────────────────────────
+
+.connections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.conn-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  background: $bg-raised;
+  border-radius: 6px;
+  border: 1px solid $border;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+
+  &:hover {
+    border-color: rgb(60, 60, 62);
+    background: rgb(38, 38, 40);
+  }
+}
+
+.conn-item-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.conn-item-name {
+  flex: 1;
+}
+
+.conn-item-type {
+  color: $text-dim;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.conn-item-delete {
+  background: none;
+  border: none;
+  color: $text-dim;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.1s, color 0.1s, background 0.1s;
+
+  .conn-item:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    color: rgb(220, 80, 80);
+    background: rgba(255, 34, 34, 0.1);
+  }
+}
+
+
+// ── Tags ──────────────────────────────────────────────────────
+
+.panel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.panel-tag {
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: $bg-raised;
+  border: 1px solid $border;
+  font-size: 11px;
+  color: $text-dim;
+}
+
+// ── Misc ──────────────────────────────────────────────────────
+
+.empty-hint {
+  color: $text-dim;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.notes-text {
+  color: $text-muted;
+  font-size: 13px;
+  line-height: 1.6;
+  // Preserve line breaks the user typed in the textarea, but still wrap
+  // long lines to the panel width.
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+// ── Actions ───────────────────────────────────────────────────
+
+.panel-actions {
+  padding: 12px 16px 16px;
+  border-top: 1px solid $border;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.panel-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid $border;
+  color: $text-muted;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+
+  &:hover {
+    background: $bg-raised;
+    color: $text;
+    border-color: rgb(60, 60, 62);
+  }
+
+  &.danger {
+    color: rgb(220, 80, 80);
+
+    &:hover {
+      background: rgba(255, 34, 34, 0.07);
+      border-color: rgba(220, 80, 80, 0.3);
+      color: rgb(255, 85, 85);
+    }
+  }
+}
+
+.panel-action-icon {
+  font-size: 14px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}

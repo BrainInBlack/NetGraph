@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an improvement or new capability for NetGraph.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        NetGraph aims to stay a small, local-first, browser-only network mapper —
+        no backend, no accounts, no telemetry, all data in `localStorage`. It's
+        built for an enthusiast mapping a home or lab network, not a sysadmin
+        managing a fleet. Proposals that fit that shape are easiest to land.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the use case or the pain point, not just the solution.
+      placeholder: When I map a network with lots of VLANs, I can't tell ... because ...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What new behavior or capability would you like? Sketch the interaction if relevant.
+      placeholder: |
+        Add a way to color connections by VLAN so ...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds you currently use, or other approaches you weighed.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This keeps NetGraph local-first — no backend, accounts, or telemetry.
+        - label: I searched existing issues and this isn't already requested.
+          required: true

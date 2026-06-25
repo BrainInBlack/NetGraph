@@ -1,0 +1,46 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# AI agent tooling — keep each contributor's assistant config local so it never
+# pollutes the repo or disrupts anyone else's setup. Add your own tool here if
+# it isn't already listed.
+.claude/
+.cursor/
+.cursorrules
+.windsurf/
+.windsurfrules
+.aider*
+.continue/
+.codeium/
+.gemini/
+.roo/
+.cline/
+.github/copilot-instructions.md
+CLAUDE.md
+CLAUDE.local.md
+GEMINI.md
+
+# Personal deploy tooling — ties to a specific server, kept out of the repo.
+scripts/deploy.sh

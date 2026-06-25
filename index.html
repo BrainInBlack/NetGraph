@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./src/assets/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NetGraph</title>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Canvas (grid background + transform container) -->
+      <div id="canvas">
+        <div id="canvas-transform">
+          <svg id="connections" width="100%" height="100%"></svg>
+          <div id="device-layer"></div>
+        </div>
+      </div>
+
+      <!-- Connect-mode indicator — top center, only visible in connect mode -->
+      <div id="connect-indicator" class="hidden" role="status" aria-live="off">
+        <div class="connect-indicator-status" id="connect-indicator-status">Connection mode — tap a device to start</div>
+        <div class="connect-indicator-modes" role="group" aria-label="Connection sub-mode">
+          <button class="connect-submode" data-submode="hub" aria-pressed="true" title="Hub — anchor stays on the first device, fan out to many">Hub</button>
+          <button class="connect-submode" data-submode="single" aria-pressed="false" title="Single — one connection at a time">Single</button>
+          <button class="connect-submode" data-submode="advanced" aria-pressed="false" title="Advanced — opens the connection editor after each link">Advanced</button>
+        </div>
+      </div>
+
+      <!-- Select-mode indicator — top center, only visible in select mode -->
+      <div id="select-indicator" class="hidden" role="status" aria-live="off">
+        <div class="select-indicator-status" id="select-indicator-status">Select mode — drag to lasso, tap to toggle</div>
+      </div>
+
+      <!-- Brand — top left -->
+      <div id="brand">
+        <div id="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5 L5.5 18 L18.5 18 Z"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="12" cy="5" r="2.6" fill="currentColor" />
+            <circle cx="5.5" cy="18" r="2.6" fill="currentColor" />
+            <circle cx="18.5" cy="18" r="2.6" fill="currentColor" />
+          </svg>
+        </div>
+        <div id="brand-wordmark">
+          <span id="brand-name">NetGraph</span>
+          <span id="brand-version"></span>
+        </div>
+      </div>
+
+      <!-- Map selector — top right -->
+      <div id="top-bar">
+        <div style="position:relative;">
+          <button id="map-selector-btn">
+            <span class="map-selector-label">My Network</span>
+            <span class="map-selector-caret">▾</span>
+          </button>
+          <div id="map-dropdown" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Bottom-right toolbar: select + connect mode + zoom -->
+      <div id="bottom-bar">
+        <button id="select-toggle" title="Select mode" aria-pressed="false" aria-label="Toggle select mode">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="11" height="11" rx="1.2"
+                  fill="none" stroke="currentColor" stroke-width="1.4"
+                  stroke-dasharray="2.2 1.8"/>
+          </svg>
+        </button>
+        <button id="connect-toggle" title="Connect mode" aria-pressed="false" aria-label="Toggle connect mode">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <circle cx="4" cy="4" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="12" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M5.4 5.4 L10.6 10.6" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          </svg>
+        </button>
+        <div id="zoom-bar">
+          <button class="zoom-btn" id="zoom-out" aria-label="Zoom out">−</button>
+          <div class="zoom-divider"></div>
+          <button id="zoom-level" aria-label="Zoom level — click to fit content">
+            <span class="zoom-level-value">100%</span>
+            <span class="zoom-level-fit">Fit</span>
+          </button>
+          <div class="zoom-divider"></div>
+          <button class="zoom-btn" id="zoom-in" aria-label="Zoom in">+</button>
+        </div>
+      </div>
+
+
+      <!-- Detail panel — right side -->
+      <div id="detail-panel" class="hidden">
+        <div class="panel-header">
+          <div class="panel-device-icon" id="panel-icon"></div>
+          <div>
+            <div class="panel-title" id="panel-title"></div>
+            <div class="panel-subtitle" id="panel-subtitle"></div>
+          </div>
+          <button class="panel-close" id="panel-close-btn">✕</button>
+        </div>
+        <div class="panel-body" id="panel-body"></div>
+        <div class="panel-actions" id="panel-actions"></div>
+      </div>
+
+      <!-- Help — bottom left -->
+      <button id="help-btn" aria-label="Help" title="Help" aria-expanded="false">?</button>
+      <aside id="help-panel" class="hidden" aria-label="Help">
+        <div class="help-header">
+          <span class="help-title">Help</span>
+          <button class="help-close" id="help-close-btn" aria-label="Close help">✕</button>
+        </div>
+        <div class="help-body">
+          <section class="help-section">
+            <div class="help-section-label">Getting started</div>
+            <div class="help-row"><span class="help-term">Add a device</span><span class="help-desc">Right-click the canvas</span></div>
+            <div class="help-row"><span class="help-term">Edit anything</span><span class="help-desc">Right-click it</span></div>
+          </section>
+          <section class="help-section">
+            <div class="help-section-label">Navigate</div>
+            <div class="help-row"><span class="help-term">Move a device</span><span class="help-desc">Drag it</span></div>
+            <div class="help-row"><span class="help-term">Pan the view</span><span class="help-desc">Drag the canvas</span></div>
+            <div class="help-row"><span class="help-term">Zoom</span><span class="help-desc">Scroll or pinch</span></div>
+            <div class="help-row"><span class="help-term">Menus on touch</span><span class="help-desc">Long-press</span></div>
+          </section>
+          <section class="help-section">
+            <div class="help-section-label">Connect devices</div>
+            <div class="help-row"><span class="help-term">Connect mode</span><span class="help-desc">Tap the link button</span></div>
+            <div class="help-row"><span class="help-term">Make a link</span><span class="help-desc">Tap two devices</span></div>
+          </section>
+          <section class="help-section">
+            <div class="help-section-label">Select &amp; duplicate</div>
+            <div class="help-row"><span class="help-term">Select mode</span><span class="help-desc">Tap the lasso button</span></div>
+            <div class="help-row"><span class="help-term">Multi-select</span><span class="help-desc">Drag to lasso, tap to toggle</span></div>
+            <div class="help-row"><span class="help-term">Copy / paste / duplicate</span><span class="help-desc">Right-click the selection</span></div>
+          </section>
+          <section class="help-section">
+            <div class="help-section-label">Your data</div>
+            <div class="help-row"><span class="help-term">Maps &amp; backups</span><span class="help-desc">Top-right menu</span></div>
+            <div class="help-row"><span class="help-term">Storage</span><span class="help-desc">Local to this browser</span></div>
+          </section>
+        </div>
+      </aside>
+
+      <!-- Context menus -->
+      <div id="ctx-menu" class="ctx-menu hidden"></div>
+      <div id="dev-ctx-menu" class="ctx-menu hidden"></div>
+      <div id="conn-ctx-menu" class="ctx-menu hidden"></div>
+
+      <!-- Modal container -->
+      <div id="modal-overlay" class="hidden"></div>
+    </div>
+    <script type="module" src="/src/ts/main.ts"></script>
+  </body>
+</html>

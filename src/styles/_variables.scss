@@ -1,0 +1,63 @@
+// ── Backgrounds ───────────────────────────────────────────────
+$bg:           rgb(13, 13, 15);
+$bg-surface:   rgb(22, 22, 24);
+$bg-raised:    rgb(34, 34, 36);
+$border:       rgb(50, 50, 52);
+
+// ── Text ──────────────────────────────────────────────────────
+$text:         rgb(242, 242, 242);
+$text-muted:   rgb(150, 150, 150);
+$text-dim:     rgb(96, 96, 96);
+
+// ── Device type accents ───────────────────────────────────────
+$c-modem:      rgb(180, 180, 180);
+$c-gateway:    rgb(100, 160, 220);
+$c-switch:     rgb(120, 190, 195);
+$c-ap:         rgb(155, 130, 215);
+$c-server:     rgb(220, 145, 100);
+$c-vm:         rgb(220, 185, 105);
+$c-client:     rgb(90, 195, 140);
+
+$device-colors: (
+  modem:   $c-modem,
+  gateway: $c-gateway,
+  switch:  $c-switch,
+  ap:      $c-ap,
+  server:  $c-server,
+  vm:      $c-vm,
+  client:  $c-client,
+);
+
+// ── Status ────────────────────────────────────────────────────
+$status-online:  rgb(90, 195, 140);
+$status-offline: rgb(210, 100, 100);
+$status-warning: rgb(225, 170, 90);
+
+// ── Grid ──────────────────────────────────────────────────────
+$grid-sm:       24px;
+$grid-lg:       120px;
+$grid-color-sm: rgba(50, 50, 52, 0.35);
+$grid-color-lg: rgba(50, 50, 52, 0.7);
+
+// ── Layout ────────────────────────────────────────────────────
+$bar-height:    46px;
+$font-stack:    'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+// ── Radii ─────────────────────────────────────────────────────
+$radius-panel:    12px;
+$radius-card:     10px;
+$radius-dropdown: 10px;
+$radius-pill:     23px;
+
+// ── Transitions ───────────────────────────────────────────────
+$ease-slide: cubic-bezier(0.4, 0, 0.2, 1);
+$dur-slide:  0.22s;
+$dur-fast:   0.12s;
+
+// ── Stacking order ────────────────────────────────────────────
+// One source of truth so we don't accidentally make a deeper overlay sit
+// behind a shallower one.
+$z-context-menu:       1000;
+$z-modal-overlay:      2000;
+$z-stacked-overlay:    2050;  // icon-manager, import-modal — over the device modal
+$z-icon-picker-overlay: 2100; // sits on TOP of the device modal AND the stacked group

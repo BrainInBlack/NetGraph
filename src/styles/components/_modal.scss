@@ -1,0 +1,703 @@
+@use '../variables' as *;
+
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: $z-modal-overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.hidden { display: none; }
+}
+
+/// Shared backdrop for dynamically-created overlays (icon-picker,
+/// icon-manager, import-modal). They each get their own `<div>` appended to
+/// <body> via `ensureStackedOverlay()` — the actual z-index is set inline
+/// from a TS-side constant so the stacking order stays in one place.
+.stacked-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $radius-panel;
+  width: 420px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.6);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid $border;
+  flex-shrink: 0;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+
+  p { font-size: 13px; line-height: 1.5; color: $text-muted; }
+  strong { color: $text; }
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 11px;
+    color: $text-dim;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  input, select, textarea {
+    background: $bg-raised;
+    border: 1px solid $border;
+    border-radius: 6px;
+    color: $text;
+    font-family: $font-stack;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color $dur-fast;
+
+    &:focus { border-color: rgb(100, 160, 220); }
+    &::placeholder { color: $text-dim; }
+  }
+
+  textarea { resize: vertical; }
+}
+
+.form-error {
+  font-size: 12px;
+  color: rgb(220, 80, 80);
+  min-height: 16px;
+  letter-spacing: 0.02em;
+
+  &:empty { display: none; }
+}
+
+.form-hint {
+  font-size: 11px;
+  color: $text-dim;
+  letter-spacing: 0.02em;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: $text-muted;
+  cursor: pointer;
+  user-select: none;
+
+  input[type="checkbox"] {
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: rgb(100, 160, 220);
+  }
+}
+
+// ── Icon picker ──────────────────────────────────────────────
+
+.icon-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  background: $bg-raised;
+  border: 1px solid $border;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: $font-stack;
+  font-size: 13px;
+  color: $text;
+  transition: border-color $dur-fast;
+
+  &:hover { border-color: rgb(68, 68, 90); }
+
+  .icon-preview {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: $bg-surface;
+    border: 1px solid $border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: $text;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    > svg { width: 18px; height: 18px; }
+    > img { width: 22px; height: 22px; object-fit: contain; }
+  }
+
+  .icon-trigger-label { flex: 1; text-align: left; color: $text-muted; }
+  .icon-trigger-hint  { color: $text-dim; font-size: 11px; }
+}
+
+.icon-picker {
+  width: 540px;
+  max-width: 90vw;
+}
+
+.icon-picker-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 16px;
+  border-bottom: 1px solid $border;
+}
+
+.icon-picker-tab {
+  background: none;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  font-family: $font-stack;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-bottom: 2px solid transparent;
+  transition: color $dur-fast, border-color $dur-fast;
+
+  &:hover { color: $text; }
+  &.active { color: $text; border-bottom-color: rgb(100, 160, 220); }
+}
+
+.icon-picker-pane {
+  padding: 16px 20px;
+  max-height: 50vh;
+  overflow-y: auto;
+
+  &.hidden { display: none; }
+}
+
+.icon-picker-category {
+  font-size: 10px;
+  color: $text-dim;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 12px 0 8px;
+
+  &:first-child { margin-top: 0; }
+}
+
+.icon-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 6px;
+}
+
+.icon-tile {
+  position: relative;
+  aspect-ratio: 1;
+  background: $bg-raised;
+  border: 1px solid $border;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $text;
+  transition: border-color $dur-fast, background $dur-fast;
+  overflow: hidden;
+
+  &:hover { border-color: rgb(68, 68, 90); background: rgb(40, 40, 44); }
+  &.selected { border-color: rgb(100, 160, 220); background: rgba(100, 160, 220, 0.08); }
+  &.is-default { font-size: 18px; }
+
+  > svg { width: 22px; height: 22px; }
+  > img { width: 28px; height: 28px; object-fit: contain; }
+
+  .icon-tile-delete {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 16px;
+    height: 16px;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    color: rgb(220, 80, 80);
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+  }
+  &:hover .icon-tile-delete { display: block; }
+  .icon-tile-delete:hover { background: rgba(220, 80, 80, 0.2); color: rgb(255, 100, 100); }
+}
+
+.icon-picker-upload {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px dashed $border;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+  color: $text-muted;
+
+  input[type="file"] { display: none; }
+
+  .upload-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: $bg-raised;
+    border: 1px solid $border;
+    color: $text;
+    cursor: pointer;
+    font-size: 13px;
+    transition: border-color $dur-fast;
+
+    &:hover { border-color: rgb(68, 68, 90); }
+  }
+
+  .upload-hint { display: block; margin-top: 8px; color: $text-dim; }
+}
+
+.icon-picker-empty {
+  padding: 30px 0;
+  text-align: center;
+  color: $text-dim;
+  font-size: 13px;
+  font-style: italic;
+}
+
+// ── Import / conflict resolution ─────────────────────────────
+
+.import-modal {
+  width: 580px;
+  max-width: 90vw;
+}
+
+.import-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+
+  &:first-of-type { margin-top: 0; }
+}
+
+.import-section-title {
+  font-size: 11px;
+  color: $text-dim;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.import-radio-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: $text-muted;
+  transition: background $dur-fast;
+
+  &:hover { background: $bg-raised; }
+
+  input[type="radio"] {
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    background: $bg-surface;
+    border: 1px solid $border;
+    border-radius: 4px;
+    color: $text;
+    font-family: $font-stack;
+    font-size: 13px;
+    padding: 4px 8px;
+    outline: none;
+
+    &:focus { border-color: rgb(100, 160, 220); }
+  }
+
+  span { flex-shrink: 0; }
+  span:has(strong), strong { color: $text; }
+  em { color: rgb(220, 80, 80); font-style: normal; }
+
+  &.danger-row strong { color: rgb(220, 80, 80); }
+}
+
+.import-conflict {
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 12px;
+  background: $bg-surface;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.import-conflict-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.import-conflict-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: $bg-raised;
+  border: 1px solid $border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $text;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  > svg { width: 22px; height: 22px; }
+  > img { width: 28px; height: 28px; object-fit: contain; }
+}
+
+.import-conflict-vs {
+  color: $text-dim;
+  font-size: 14px;
+}
+
+.import-conflict-name {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: $text;
+}
+
+.import-conflict-note {
+  font-size: 11px;
+  color: $text-dim;
+  margin-top: 2px;
+}
+
+.import-conflict-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+// ── Icon manager ─────────────────────────────────────────────
+
+// The manager reuses the picker's tile grid + upload box; only the modal
+// width is unique to it.
+.icon-manager {
+  width: 480px;
+  max-width: 90vw;
+}
+
+.form-row-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  // IP gets the bulk of the row; port is a small number, so it sits in a
+  // narrow box on the right instead of stretching to match IP's width.
+  &--ip-port { grid-template-columns: 1fr 90px; }
+}
+
+// ── Card-width segmented control ─────────────────────────────
+
+.width-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.width-option {
+  background: $bg-raised;
+  border: 1px solid $border;
+  border-radius: 6px;
+  // Match the icon picker trigger's height so both controls in the
+  // Icon + Card Width row line up.
+  height: 50px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-family: $font-stack;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color $dur-fast, background $dur-fast;
+
+  &:hover { border-color: rgb(68, 68, 90); }
+  &:focus-visible { outline: 2px solid rgb(100, 160, 220); outline-offset: 2px; }
+
+  &[aria-checked="true"] {
+    border-color: rgb(100, 160, 220);
+    background: rgba(100, 160, 220, 0.08);
+
+    .width-glyph { background: rgb(100, 160, 220); }
+  }
+
+  .width-glyph {
+    display: block;
+    height: 10px;
+    background: $text-dim;
+    border-radius: 2px;
+    transition: background $dur-fast;
+  }
+}
+
+.modal-footer {
+  padding: 12px 20px 16px;
+  border-top: 1px solid $border;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.modal-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid $border;
+  font-family: $font-stack;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background $dur-fast, color $dur-fast, border-color $dur-fast;
+
+  &.secondary {
+    background: transparent;
+    color: $text-muted;
+    &:hover { background: $bg-raised; color: $text; }
+  }
+
+  &.primary {
+    background: rgb(100, 160, 220);
+    border-color: rgb(100, 160, 220);
+    color: rgb(13, 13, 15);
+    font-weight: 600;
+    &:hover { background: rgb(120, 175, 230); }
+  }
+
+  &.danger {
+    background: rgb(210, 60, 60);
+    border-color: rgb(210, 60, 60);
+    color: rgb(242, 242, 242);
+    font-weight: 600;
+    &:hover { background: rgb(230, 75, 75); }
+  }
+}
+
+// ── Connection editor ───────────────────────────────────────
+
+.conn-edit-summary {
+  color: $text-muted;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.conn-edit-endpoints {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.conn-edit-endpoint {
+  // --device-color is set inline per frame based on the connected device's
+  // type, so the source and target frames match the card colors on the
+  // canvas. Falls back to the neutral border when the var isn't provided.
+  position: relative;
+  border: 1px solid var(--device-color, #{$border});
+  border-radius: 8px;
+  // Extra top padding makes room for the absolutely-positioned title that
+  // sits over the top border.
+  padding: 18px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+
+  // We used to use <fieldset>/<legend>, but Safari's special legend box
+  // ignores margin: auto and there's no portable centering trick. So the
+  // frame is a plain <div> and the "legend" is a small absolutely-positioned
+  // pill that punches through the top border with the modal background.
+  .conn-edit-endpoint-title {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 8px;
+    background: $bg-surface;
+    color: var(--device-color, #{$text-muted});
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  // When the target picker IS the title pill (Add Connection), strip the
+  // native <select> chrome so it reads like the static label on the source
+  // side, with just a caret cue that it's interactive.
+  .legend-select {
+    appearance: none;
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: $font-stack;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0 14px 0 4px;
+    // Inline caret so the affordance survives the appearance: none reset.
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: right 4px top 50%, right 0 top 50%;
+    background-size: 4px 4px, 4px 4px;
+    background-repeat: no-repeat;
+
+    &:focus { outline: none; text-decoration: underline; }
+  }
+}
+
+// ── Connection-type segmented control ────────────────────────
+
+.type-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.type-option {
+  background: $bg-raised;
+  border: 1px solid $border;
+  border-radius: 6px;
+  height: 50px;
+  padding: 0 12px;
+  cursor: pointer;
+  font-family: $font-stack;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: border-color $dur-fast, background $dur-fast, color $dur-fast;
+
+  &:hover { border-color: rgb(68, 68, 90); color: $text; }
+  &:focus-visible { outline: 2px solid rgb(100, 160, 220); outline-offset: 2px; }
+
+  &[aria-checked="true"] {
+    border-color: rgb(100, 160, 220);
+    background: rgba(100, 160, 220, 0.08);
+    color: $text;
+  }
+
+  .type-glyph {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+
+    > svg { width: 18px; height: 18px; }
+  }
+
+  .type-option-label {
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+}
+
+// Port input + named quick-fill buttons
+.port-input {
+  // Inherits sizing from `.form-row input` — only customizations here.
+  font-family: $font-stack;
+}
+
+.port-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.port-name-btn {
+  background: $bg-raised;
+  border: 1px solid $border;
+  border-radius: 4px;
+  color: $text-muted;
+  font-family: $font-stack;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  cursor: pointer;
+  transition: background $dur-fast, color $dur-fast, border-color $dur-fast;
+
+  &:hover { color: $text; border-color: rgb(80, 80, 84); }
+
+  &.port-name-clear {
+    color: $text-dim;
+    &:hover { color: $text-muted; }
+  }
+}
+
+// Side picker — 3x3 grid (T, L/Auto/R, B) with corners blank
+.side-picker {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  grid-template-rows: 1fr 1.4fr 1fr;
+  gap: 4px;
+  width: 140px;
+  height: 100px;
+  padding: 4px;
+  border: 1px solid $border;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.18);
+  // The picker is narrower than its row, so center it horizontally while
+  // leaving the SIDE label at the row's left edge where the other labels sit.
+  margin-inline: auto;
+}
+
+.side-pick {
+  background: $bg-raised;
+  border: 1px solid $border;
+  border-radius: 4px;
+  color: $text-dim;
+  cursor: pointer;
+  transition: background $dur-fast, border-color $dur-fast, color $dur-fast;
+  font-family: $font-stack;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0;
+
+  &:hover { border-color: rgb(80, 80, 84); color: $text-muted; }
+
+  &.selected {
+    background: rgba(100, 160, 220, 0.22);
+    border-color: rgb(100, 160, 220);
+    color: $text;
+  }
+
+  // Grid placement
+  &.side-top    { grid-column: 2; grid-row: 1; }
+  &.side-left   { grid-column: 1; grid-row: 2; }
+  &.side-auto   { grid-column: 2; grid-row: 2; }
+  &.side-right  { grid-column: 3; grid-row: 2; }
+  &.side-bottom { grid-column: 2; grid-row: 3; }
+}

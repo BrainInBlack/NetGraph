@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Keep the npm dependencies current.
+  - package-ecosystem: npm
+    directory: "/"
+    # Bumps flow through the develop integration branch, not straight to main.
+    target-branch: "develop"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: deps
+    groups:
+      # One PR per week for the routine dev-tooling bumps instead of a flood.
+      dev-dependencies:
+        dependency-type: development
+
+  # Keep the GitHub Actions in our workflows current (this is what would have
+  # caught the actions/checkout Node-20 deprecation).
+  - package-ecosystem: github-actions
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci

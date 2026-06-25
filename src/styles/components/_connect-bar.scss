@@ -1,0 +1,37 @@
+@use '../variables' as *;
+
+// Connect-mode toggle button — own pill, left of the zoom bar.
+// When pressed (`aria-pressed="true"`), it glows with the gateway-blue accent
+// to mirror the on-canvas connect-mode glow.
+#connect-toggle {
+  width: $bar-height;
+  height: $bar-height;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: 50%;
+  color: $text-muted;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background $dur-fast, color $dur-fast, border-color $dur-fast, box-shadow $dur-fast;
+
+  &:hover {
+    background: $bg-raised;
+    color: $text;
+  }
+
+  &[aria-pressed="true"] {
+    background: rgba(100, 160, 220, 0.22);
+    border-color: rgba(100, 160, 220, 0.6);
+    color: rgb(140, 200, 240);
+    box-shadow: 0 0 0 1px rgba(100, 160, 220, 0.35),
+                0 0 16px rgba(100, 160, 220, 0.25);
+
+    &:hover {
+      background: rgba(100, 160, 220, 0.32);
+      color: rgb(170, 215, 245);
+    }
+  }
+}

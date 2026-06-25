@@ -1,0 +1,66 @@
+@use '../variables' as *;
+
+.ctx-menu {
+  position: fixed;
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $radius-dropdown;
+  padding: 6px;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.53);
+  z-index: $z-context-menu;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.ctx-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: $text;
+  transition: background 0.1s;
+
+  &:hover {
+    background: $bg-raised;
+  }
+
+  &.danger {
+    color: rgb(255, 85, 85);
+
+    &:hover {
+      background: rgba(255, 34, 34, 0.08);
+    }
+  }
+}
+
+.ctx-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+.ctx-separator {
+  height: 1px;
+  background: $border;
+  margin: 4px 0;
+}
+
+// Compact count badge tagged onto multi-select actions ("Copy 3")
+.ctx-count {
+  margin-left: auto;
+  padding: 1px 7px;
+  font-size: 11px;
+  color: $text-muted;
+  background: $bg-raised;
+  border-radius: $radius-pill;
+  letter-spacing: 0.03em;
+}
