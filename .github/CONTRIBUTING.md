@@ -11,7 +11,7 @@ see [README.md](../README.md). For the full architecture and conventions, see
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 18 or newer.
+- [Node.js](https://nodejs.org/) 24 or newer (current LTS).
 
 Node is only needed to **build or develop** NetGraph — not to run a built copy.
 The output is plain static files (and a single self-contained HTML file) that
