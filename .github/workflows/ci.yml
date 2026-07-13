@@ -12,11 +12,12 @@ permissions:
 jobs:
   build-and-test:
     # Build is OS-independent (Vite + tsc), so a single Linux runner is enough.
-    # The matrix backs up the "Node 18+" support claim in CONTRIBUTING.md.
+    # Pinned to Node 24 (current Active LTS), matching engines and the
+    # CONTRIBUTING support claim.
     strategy:
       fail-fast: false
       matrix:
-        node: [20, 22]
+        node: [24]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
