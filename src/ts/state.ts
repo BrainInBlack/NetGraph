@@ -2,16 +2,16 @@ import { loadState, saveState, getActiveMap, StorageQuotaError } from './storage
 import { renderAll } from './graph/renderer';
 import type { AppState } from './types';
 
-// ── Global app state ─────────────────────────────────────────
+// -- Global app state -----------------------------------------
 
 let state: AppState = loadState();
 let selectedDeviceId: string | null = null;
 // Multi-selection for select mode. Disjoint from `selectedDeviceId` in
-// practice — entering select mode clears the single selection / panel, and
+// practice - entering select mode clears the single selection / panel, and
 // committing a single-device click outside select mode clears the multi set.
 let selectedDeviceIds: Set<string> = new Set();
 
-// Event hooks — set by main.ts to wire UI actions without circular deps
+// Event hooks - set by main.ts to wire UI actions without circular deps
 const hooks = {
   // clientX/clientY are passed through so connect mode can derive the
   // target side from where on the card the tap landed.
@@ -33,7 +33,7 @@ export function setState(next: AppState): void {
   try {
     saveState(state);
   } catch (err) {
-    // Storage failures are user-visible — silently dropping the save would
+    // Storage failures are user-visible - silently dropping the save would
     // leave the in-memory state diverged from disk and the next reload would
     // discard their edits.
     if (err instanceof StorageQuotaError) alert(err.message);
@@ -73,7 +73,7 @@ let renderScheduled = false;
  * render. Several callers can mutate state and request a render within one
  * event (e.g. a click that changes selection *and* state); without this each
  * would trigger a full `renderAll`. A drag's `pointermove` can also fire more
- * than once per frame — this collapses those to one render per frame.
+ * than once per frame - this collapses those to one render per frame.
  *
  * `render()` itself stays synchronous for the init path, which reads laid-out
  * geometry (centerContent) immediately after rendering.
@@ -93,10 +93,10 @@ export function render(): void {
   hooks.onAfterRender();
 }
 
-// ── Device interaction callbacks (called from renderer) ──────
+// -- Device interaction callbacks (called from renderer) ------
 
 export function onDeviceClick(deviceId: string, clientX: number, clientY: number): void {
-  // Selection is owned by the hook (main.ts) so it can route the click —
+  // Selection is owned by the hook (main.ts) so it can route the click -
   // e.g. connect mode treats a click as a command, not a selection. The hook
   // is responsible for calling setSelectedDeviceId if the click is a normal
   // "open panel" interaction.
@@ -104,7 +104,7 @@ export function onDeviceClick(deviceId: string, clientX: number, clientY: number
 }
 
 export function onDeviceContextMenu(deviceId: string, x: number, y: number): void {
-  // Right-click only opens the menu — it does not select the device
+  // Right-click only opens the menu - it does not select the device
   hooks.onDeviceContextMenu(deviceId, x, y);
 }
 

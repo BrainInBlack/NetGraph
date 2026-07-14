@@ -45,7 +45,7 @@ export class StorageQuotaError extends Error {
     super(
       'Browser storage is full. Your last change will not be saved.\n\n'
       + 'To recover: delete some maps or custom icons via the toolbar menu, '
-      + 'then try the change again. Avoid reloading the page first — that '
+      + 'then try the change again. Avoid reloading the page first - that '
       + 'will discard the unsaved change.',
     );
     this.name = 'StorageQuotaError';
@@ -68,7 +68,7 @@ export function getActiveMap(state: AppState): NetworkMap {
   return state.maps.find(m => m.id === state.activeMapId) ?? state.maps[0];
 }
 
-// ── Migration / validation ───────────────────────────────────
+// -- Migration / validation -----------------------------------
 
 /**
  * Take whatever was parsed from localStorage and coerce it into a valid

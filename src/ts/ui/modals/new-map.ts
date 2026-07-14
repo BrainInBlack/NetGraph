@@ -5,7 +5,7 @@ import { q, nextFrame } from '../../util';
 import { renderDropdown } from '../toolbar';
 import { showModal, dismissModal } from './shared';
 
-// ── New Map ──────────────────────────────────────────────────
+// -- New Map --------------------------------------------------
 
 export function showNewMapModal(): void {
   const state = getState();

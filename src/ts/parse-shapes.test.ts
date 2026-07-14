@@ -12,7 +12,7 @@ import {
 } from './parse-shapes';
 import { DEVICE_WIDTH_MIN, DEVICE_WIDTH_MAX, MAX_NOTES_LENGTH } from './device-config';
 
-// ── isObject ─────────────────────────────────────────────────
+// -- isObject -------------------------------------------------
 
 describe('isObject', () => {
   it('accepts plain objects', () => {
@@ -28,7 +28,7 @@ describe('isObject', () => {
   });
 });
 
-// ── parseDevice ──────────────────────────────────────────────
+// -- parseDevice ----------------------------------------------
 
 describe('parseDevice', () => {
   const minimal = { id: 'd1', name: 'router', type: 'gateway' };
@@ -153,7 +153,7 @@ describe('parseDevice', () => {
   });
 });
 
-// ── parseLink ────────────────────────────────────────────────
+// -- parseLink ------------------------------------------------
 
 describe('parseLink', () => {
   const minimal = { id: 'l1', sourceId: 'd1', targetId: 'd2' };
@@ -207,7 +207,7 @@ describe('parseLink', () => {
     expect(parseLink({ ...minimal })!.sourceSide).toBeUndefined();
   });
 
-  it('accepts a numeric port jack (1–256)', () => {
+  it('accepts a numeric port jack (1-256)', () => {
     expect(parseLink({ ...minimal, sourcePort: 1 })!.sourcePort).toBe(1);
     expect(parseLink({ ...minimal, sourcePort: 24 })!.sourcePort).toBe(24);
     expect(parseLink({ ...minimal, sourcePort: 256 })!.sourcePort).toBe(256);
@@ -239,7 +239,7 @@ describe('parseLink', () => {
   });
 });
 
-// ── parseMap ─────────────────────────────────────────────────
+// -- parseMap -------------------------------------------------
 
 describe('parseMap', () => {
   it('returns null for non-object or missing id/name', () => {
@@ -347,7 +347,7 @@ describe('parseMap', () => {
 
   it('caps the links array before parsing (with endpoints that all exist)', () => {
     // Single shared device, every link is a self-loop pointing at it, so the
-    // endpoint filter can't remove anything — what's left is purely the cap.
+    // endpoint filter can't remove anything - what's left is purely the cap.
     const m = parseMap({
       id: 'm1',
       name: 'home',
@@ -362,7 +362,7 @@ describe('parseMap', () => {
   });
 });
 
-// ── parseCustomIcon ──────────────────────────────────────────
+// -- parseCustomIcon ------------------------------------------
 
 describe('parseCustomIcon', () => {
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
@@ -434,7 +434,7 @@ describe('parseCustomIcon', () => {
   });
 });
 
-// ── parseCustomIcons ─────────────────────────────────────────
+// -- parseCustomIcons -----------------------------------------
 
 describe('parseCustomIcons', () => {
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';

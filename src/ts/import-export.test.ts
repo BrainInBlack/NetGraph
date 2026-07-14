@@ -12,7 +12,7 @@ function icon(id: string): CustomIcon {
   return { id, name: id, kind: 'image', data: 'data:image/png;base64,AAAA', createdAt: 't' };
 }
 
-// ── exportMap ───────────────────────────────────────────────────
+// -- exportMap ---------------------------------------------------
 
 describe('exportMap', () => {
   it('wraps the map with version + kind', () => {
@@ -21,7 +21,7 @@ describe('exportMap', () => {
     expect(out.kind).toBe('map');
   });
 
-  it('deep-clones the map — no shared references with the input', () => {
+  it('deep-clones the map - no shared references with the input', () => {
     const m = map({ devices: [device()] });
     const out = exportMap(m, []);
     expect(out.map).not.toBe(m);
@@ -42,7 +42,7 @@ describe('exportMap', () => {
   });
 });
 
-// ── exportBundle ────────────────────────────────────────────────
+// -- exportBundle ------------------------------------------------
 
 describe('exportBundle', () => {
   it('wraps full state with version, kind, and activeMapId', () => {
@@ -65,9 +65,9 @@ describe('exportBundle', () => {
   });
 });
 
-// ── parseImport — rejections ────────────────────────────────────
+// -- parseImport - rejections ------------------------------------
 
-describe('parseImport — rejections', () => {
+describe('parseImport - rejections', () => {
   it('rejects an oversized file', () => {
     const huge = 'a'.repeat(5 * 1024 * 1024 + 1);
     expect(() => parseImport(huge)).toThrow(ImportError);
@@ -106,9 +106,9 @@ describe('parseImport — rejections', () => {
   });
 });
 
-// ── parseImport — success ───────────────────────────────────────
+// -- parseImport - success ---------------------------------------
 
-describe('parseImport — success', () => {
+describe('parseImport - success', () => {
   it('parses a single-map export', () => {
     const result = parseImport(JSON.stringify({ version: 1, kind: 'map', map: map(), customIcons: [] }));
     expect(result.kind).toBe('map');
@@ -144,10 +144,10 @@ describe('parseImport — success', () => {
   });
 });
 
-// ── parseImport — round-trip ────────────────────────────────────
+// -- parseImport - round-trip ------------------------------------
 
-describe('parseImport — round-trip', () => {
-  it('exportBundle → JSON → parseImport preserves maps, active id, and icons', () => {
+describe('parseImport - round-trip', () => {
+  it('exportBundle -> JSON -> parseImport preserves maps, active id, and icons', () => {
     const state: AppState = {
       activeMapId: 'm2',
       maps: [map({ id: 'm1', name: 'Home' }), map({ id: 'm2', name: 'Lab' })],
@@ -160,7 +160,7 @@ describe('parseImport — round-trip', () => {
     expect(result.customIcons.map(c => c.id)).toEqual(['logo']);
   });
 
-  it('exportMap → JSON → parseImport preserves the map and its referenced icon', () => {
+  it('exportMap -> JSON -> parseImport preserves the map and its referenced icon', () => {
     const m = map({ id: 'solo', devices: [device({ iconId: 'custom:logo' })] });
     const result = parseImport(JSON.stringify(exportMap(m, [icon('logo')])));
     expect(result.kind).toBe('map');

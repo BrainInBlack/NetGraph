@@ -1,6 +1,6 @@
 import { bindOverlayDismiss, pushModalLock, popModalLock, trapFocus, q } from '../../util';
 
-// ── Primary modal plumbing ───────────────────────────────────
+// -- Primary modal plumbing -----------------------------------
 //
 // One `#modal-overlay` element hosts a single dialog at a time. `showModal`
 // injects markup and traps focus; `dismissModal` tears it down. Stacked
@@ -15,7 +15,7 @@ export function showModal(content: string): HTMLElement {
   overlay.classList.remove('hidden');
   pushModalLock();
 
-  // Bind backdrop click exactly once — repeated showModal calls would otherwise
+  // Bind backdrop click exactly once - repeated showModal calls would otherwise
   // stack listeners on the long-lived #modal-overlay element.
   if (!overlayClickBound) {
     bindOverlayDismiss(overlay, dismissModal);

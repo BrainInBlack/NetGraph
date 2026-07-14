@@ -2,23 +2,23 @@
  * Allow-list-based SVG sanitizer for user-supplied or imported icon markup.
  *
  * Blocks everything that isn't on the explicit tag/attribute lists, including:
- *   - <script>                  — code execution
- *   - <foreignObject>           — arbitrary XHTML / JS via namespace tricks
- *   - <style>                   — CSS with external url() refs
- *   - <image>                   — phones home with the user's IP
- *   - <use href="http://...">   — external resource fetch
+ *   - <script>                  - code execution
+ *   - <foreignObject>           - arbitrary XHTML / JS via namespace tricks
+ *   - <style>                   - CSS with external url() refs
+ *   - <image>                   - phones home with the user's IP
+ *   - <use href="http://...">   - external resource fetch
  *   - on* event handler attrs
  *   - href / xlink:href anywhere except <use>, and only fragment refs there
- *   - url(http://…) / url(data:…) in fill, stroke, style, filter, etc.
- *   - CDATA sections / comments — they survive XML serialization intact and
- *     can smuggle live markup across the XML→HTML re-parse boundary (mXSS)
+ *   - url(http://...) / url(data:...) in fill, stroke, style, filter, etc.
+ *   - CDATA sections / comments - they survive XML serialization intact and
+ *     can smuggle live markup across the XML->HTML re-parse boundary (mXSS)
  *
  * Walk is iterative so a pathologically nested SVG can't blow the stack.
  *
  * Note the parser asymmetry this defends against: we parse as `image/svg+xml`
  * (XML) but the app reinserts the result via `innerHTML` (HTML). A node that's
- * inert text in XML — e.g. a CDATA section holding `</title><img onerror=…>` —
- * serializes back out as `<![CDATA[…]]>` and, when HTML-parsed, can break out
+ * inert text in XML - e.g. a CDATA section holding `</title><img onerror=...>` -
+ * serializes back out as `<![CDATA[...]]>` and, when HTML-parsed, can break out
  * into a live element. Stripping every non-element / non-text node closes that.
  */
 
@@ -26,7 +26,7 @@
  * Hard cap on SVG source length. An icon glyph is tiny (Lucide icons are well
  * under 1 KB); 64 KB is generous headroom for an elaborate multi-path icon
  * while bounding parse/serialize cost and localStorage footprint. Oversized
- * input is rejected outright (`null`). This is the single size chokepoint —
+ * input is rejected outright (`null`). This is the single size chokepoint -
  * both the import path (`parse-shapes`) and the upload path (`icon-picker`)
  * flow through `sanitizeSvg`, so the limit holds everywhere. Raster uploads
  * have their own separate, larger pre-downscale cap in `icon-picker`.
@@ -36,13 +36,21 @@ export const MAX_SVG_LENGTH = 64 * 1024;
 export function sanitizeSvg(text: string): string | null {
   if (text.length > MAX_SVG_LENGTH) return null;
 
+  // CodeQL flags this parse as `js/xss-through-dom` ("DOM text reinterpreted as
+  // HTML"). It is a false positive: this is the sanitizer's own entry point.
+  // The untrusted string is parsed here, then the tree is scrubbed against an
+  // allow-list of tags and attributes and walked over all child nodes (dropping
+  // CDATA, comments, and processing instructions, see the mXSS note below)
+  // before `root.outerHTML` is returned. Nothing reaches the DOM unsanitized.
+  // The alert is dismissed as a false positive in GitHub code scanning; keep
+  // this comment so the reasoning is visible at the source.
   const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
   const root = doc.querySelector('svg');
   if (!root || doc.querySelector('parsererror')) return null;
 
-  // SVG is XML — names are case-sensitive. Allow-list lookups use the original
+  // SVG is XML - names are case-sensitive. Allow-list lookups use the original
   // case; lowercasing here used to silently drop linearGradient, viewBox, etc.
-  // Security checks (on*, href, url) stay case-insensitive — see isAttrAllowed.
+  // Security checks (on*, href, url) stay case-insensitive - see isAttrAllowed.
   const stack: Element[] = [root];
   while (stack.length) {
     const el = stack.pop()!;
@@ -128,7 +136,7 @@ const URL_BEARING_ATTRS = new Set([
 function isAttrAllowed(tag: string, name: string, value: string): boolean {
   const lname = name.toLowerCase();
 
-  // Security checks stay case-insensitive — never trust `OnClick`, `HREF`, etc.
+  // Security checks stay case-insensitive - never trust `OnClick`, `HREF`, etc.
   if (lname.startsWith('on')) return false;
 
   if (lname === 'href' || lname === 'xlink:href') {
@@ -147,9 +155,9 @@ function isAttrAllowed(tag: string, name: string, value: string): boolean {
 
 function areAllUrlsFragmentRefs(value: string): boolean {
   // A naive `url(` scan is bypassable two ways, both pointless in a real icon:
-  //   1. CSS escapes — `\75rl(…)` is `url(…)` to the CSS parser but not to a
+  //   1. CSS escapes - `\75rl(...)` is `url(...)` to the CSS parser but not to a
   //      literal-token regex. Any backslash in a paint/style value is suspect.
-  //   2. Bare-string resource functions — image-set(), image(), cross-fade(),
+  //   2. Bare-string resource functions - image-set(), image(), cross-fade(),
   //      element() load external refs with no `url(` token at all.
   // Reject either outright before checking the remaining url() tokens.
   if (/\\/.test(value)) return false;

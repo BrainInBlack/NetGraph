@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        NetGraph aims to stay a small, local-first, browser-only network mapper —
+        NetGraph aims to stay a small, local-first, browser-only network mapper -
         no backend, no accounts, no telemetry, all data in `localStorage`. It's
         built for an enthusiast mapping a home or lab network, not a sysadmin
         managing a fleet. Proposals that fit that shape are easiest to land.
@@ -36,6 +36,6 @@ body:
     attributes:
       label: Scope check
       options:
-        - label: This keeps NetGraph local-first — no backend, accounts, or telemetry.
+        - label: This keeps NetGraph local-first - no backend, accounts, or telemetry.
         - label: I searched existing issues and this isn't already requested.
           required: true

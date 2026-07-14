@@ -1,6 +1,6 @@
 @use '../variables' as *;
 
-// ── Help button — bottom left ─────────────────────────────────
+// -- Help button - bottom left ---------------------------------
 
 #help-btn {
   position: fixed;
@@ -33,7 +33,7 @@
   }
 }
 
-// ── Help panel — slide-in from left ───────────────────────────
+// -- Help panel - slide-in from left ---------------------------
 
 #help-panel {
   position: fixed;

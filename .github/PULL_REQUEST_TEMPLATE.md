@@ -1,5 +1,5 @@
 <!--
-Thanks for contributing to NetGraph! Please keep PRs focused — one change per PR.
+Thanks for contributing to NetGraph! Please keep PRs focused - one change per PR.
 See .github/CONTRIBUTING.md for the ground rules. PRs target `develop`.
 -->
 
@@ -19,7 +19,7 @@ See .github/CONTRIBUTING.md for the ground rules. PRs target `develop`.
 - [ ] One focused change, with a short description of the why (above).
 - [ ] Targets the `develop` branch (or `main` for an urgent fix).
 - [ ] Type-check is clean: `npx tsc --noEmit`.
-- [ ] Tests pass: `npm test` — and new behavior is covered by a test where practical.
+- [ ] Tests pass: `npm test` - and new behavior is covered by a test where practical.
 - [ ] Both builds succeed: `npm run build`.
 - [ ] Added a note under `## [Unreleased]` in `CHANGELOG.md`.
 - [ ] If behavior changed, kept the docs in sync: `README.md`, `docs/ARCHITECTURE.md`, and any in-app help.

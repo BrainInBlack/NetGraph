@@ -3,10 +3,10 @@ import type { LinkPort, LinkSide, NamedPort } from '../../types';
 import { NAMED_PORTS } from '../../types';
 
 // Shared form fields for the Add Connection + Edit Connection modals: the port
-// input (with named-port quick-fill) and the 3×3 side picker.
+// input (with named-port quick-fill) and the 3x3 side picker.
 
 /**
- * Parse a port input. Accepts either a positive integer 1–256 or one of the
+ * Parse a port input. Accepts either a positive integer 1-256 or one of the
  * named ports (case-sensitive). Empty / whitespace returns `undefined` to mean
  * "no port set". Everything else returns `null` so the caller can show an
  * error without confusing it with "user chose to clear the field".
@@ -47,7 +47,7 @@ export function renderPortInput(id: string, current: LinkPort | undefined): stri
     `<button type="button" class="port-name-btn" data-name="${n}">${n}</button>`
   ).join('');
   return `
-    <input type="text" class="port-input" id="${id}" value="${escapeHtml(value)}" placeholder="1–256 or named" autocomplete="off" />
+    <input type="text" class="port-input" id="${id}" value="${escapeHtml(value)}" placeholder="1-256 or named" autocomplete="off" />
     <div class="port-names" data-input="${id}">
       <button type="button" class="port-name-btn port-name-clear" data-name="">Clear</button>
       ${namedBtns}

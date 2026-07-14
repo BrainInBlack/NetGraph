@@ -13,7 +13,7 @@ import {
   bindPortInput,
 } from './connection-fields';
 
-// ── Type segmented control ───────────────────────────────────
+// -- Type segmented control -----------------------------------
 
 const LINK_TYPE_OPTIONS: { value: LinkType; label: string; svg: string }[] = [
   { value: 'wired',    label: 'Wired',    svg: Cable },
@@ -50,7 +50,7 @@ function bindTypeOptions(modal: HTMLElement, id: string): () => LinkType {
   };
 }
 
-// ── Edit Connection ──────────────────────────────────────────
+// -- Edit Connection ------------------------------------------
 
 export function showEditConnectionModal(linkId: string): void {
   const state = getState();
@@ -123,7 +123,7 @@ export function showEditConnectionModal(linkId: string): void {
     const sourcePort = parsePortInput(sourcePortInput);
     const targetPort = parsePortInput(targetPortInput);
     if (sourcePort === null || targetPort === null) {
-      errorEl.textContent = 'Port must be empty, 1–256, or one of: ' + NAMED_PORTS.join(', ');
+      errorEl.textContent = 'Port must be empty, 1-256, or one of: ' + NAMED_PORTS.join(', ');
       return;
     }
 
@@ -155,7 +155,7 @@ export function showEditConnectionModal(linkId: string): void {
   });
 }
 
-// ── Add Connection ───────────────────────────────────────────
+// -- Add Connection -------------------------------------------
 
 export function showConnectionModal(sourceDeviceId: string): void {
   const state = getState();
@@ -183,7 +183,7 @@ export function showConnectionModal(sourceDeviceId: string): void {
     return;
   }
 
-  // Drop the "(type)" hint — the legend's tint already conveys the device
+  // Drop the "(type)" hint - the legend's tint already conveys the device
   // type, so the dropdown can just show the bare name.
   //
   // `d.type` is interpolated raw into data-type / inline-style sites below
@@ -246,13 +246,13 @@ export function showConnectionModal(sourceDeviceId: string): void {
   const errorEl = q(modal, '#modal-conn-error');
 
   // The target device picker IS the fieldset legend, so changing it only
-  // needs to re-tint the surrounding fieldset — the legend text takes care of
+  // needs to re-tint the surrounding fieldset - the legend text takes care of
   // itself.
   const targetSelect = q<HTMLSelectElement>(modal, '#modal-target');
   const targetFieldset = q<HTMLElement>(modal, '#modal-target-endpoint');
   targetSelect.addEventListener('change', () => {
     const type = targetSelect.selectedOptions[0]?.dataset.type;
-    // Skip the property update if dataset.type is somehow missing — setting
+    // Skip the property update if dataset.type is somehow missing - setting
     // `var(--c-)` would be invalid CSS and rely on the fallback chain.
     if (type) targetFieldset.style.setProperty('--device-color', `var(--c-${type})`);
   });
@@ -264,7 +264,7 @@ export function showConnectionModal(sourceDeviceId: string): void {
     const sourcePort = parsePortInput(q<HTMLInputElement>(modal, '#modal-source-port').value);
     const targetPort = parsePortInput(q<HTMLInputElement>(modal, '#modal-target-port').value);
     if (sourcePort === null || targetPort === null) {
-      errorEl.textContent = 'Port must be empty, 1–256, or one of: ' + NAMED_PORTS.join(', ');
+      errorEl.textContent = 'Port must be empty, 1-256, or one of: ' + NAMED_PORTS.join(', ');
       return;
     }
 

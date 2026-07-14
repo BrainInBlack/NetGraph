@@ -21,15 +21,15 @@ function link(id: string, sourceId: string, targetId: string, sourceSide?: Link[
   return { id, sourceId, targetId, type: 'wired', sourceSide, targetSide };
 }
 
-// ── Tie-break for column-of-targets-below ───────────────────────
+// -- Tie-break for column-of-targets-below -----------------------
 //
 // Hub at the top, two columns of three targets each below. All targets share
 // either an x value (column) so the primary sort key (target.x along the
 // source's bottom tangent) ties; the secondary key should order them by depth
 // so the Z-bends don't cross.
 
-describe('computeEndpointOffsets — fan-out tie-break', () => {
-  it('column of targets BELOW + LEFT of source: leftmost source endpoint → topmost target', () => {
+describe('computeEndpointOffsets - fan-out tie-break', () => {
+  it('column of targets BELOW + LEFT of source: leftmost source endpoint -> topmost target', () => {
     // Source bottom edge; target column to the LEFT of source's center.
     // Expected: leftmost endpoint (most negative sx) goes to the topmost target.
     const src = device('src', 500, 0);
@@ -57,9 +57,9 @@ describe('computeEndpointOffsets — fan-out tie-break', () => {
     expect(sx[1]).toBeLessThan(sx[2]);
   });
 
-  it('column of targets BELOW + RIGHT of source: leftmost source endpoint → bottommost target', () => {
+  it('column of targets BELOW + RIGHT of source: leftmost source endpoint -> bottommost target', () => {
     // Mirror image: target column to the RIGHT of source. Closer source endpoint
-    // (rightmost) should reach the topmost target; leftmost source → bottommost.
+    // (rightmost) should reach the topmost target; leftmost source -> bottommost.
     const src = device('src', 100, 0);
     const t1  = device('t1',  500, 200); // top
     const t2  = device('t2',  500, 350); // middle
@@ -79,7 +79,7 @@ describe('computeEndpointOffsets — fan-out tie-break', () => {
       ['src', src], ['t1', t1], ['t2', t2], ['t3', t3],
     ]), geom);
 
-    // Leftmost endpoint (smallest sx) → bottommost target (L3).
+    // Leftmost endpoint (smallest sx) -> bottommost target (L3).
     const sx = [out.get('L1')!.sx, out.get('L2')!.sx, out.get('L3')!.sx];
     expect(sx[0]).toBeGreaterThan(sx[1]); // L1 (top) is rightmost
     expect(sx[1]).toBeGreaterThan(sx[2]); // L3 (bottom) is leftmost
@@ -87,7 +87,7 @@ describe('computeEndpointOffsets — fan-out tie-break', () => {
 
   it('row of targets ABOVE + LEFT of source (left side fan-out): order matches column depth', () => {
     // Source's LEFT side; targets all at x=50, varying y. Targets above source.
-    // Tangent runs along Y. Primary key = target.y, all tied? No — targets vary
+    // Tangent runs along Y. Primary key = target.y, all tied? No - targets vary
     // in y here. Instead, test left-side fan-out with targets sharing y (a row).
     // Row of targets at y=100 to the left of source.
     const src = device('src', 500, 500);
@@ -110,8 +110,8 @@ describe('computeEndpointOffsets — fan-out tie-break', () => {
     ]), geom);
 
     // Source side LEFT runs along Y. Primary key target.y is tied (all 145).
-    // Targets are ABOVE source (sc.y > tc.y → sign positive → secondary = +tc.x).
-    // Ascending: smallest tc.x first → L1 first.
+    // Targets are ABOVE source (sc.y > tc.y -> sign positive -> secondary = +tc.x).
+    // Ascending: smallest tc.x first -> L1 first.
     // Topmost endpoint on source.left (most negative sy) should be L1.
     const sy = [out.get('L1')!.sy, out.get('L2')!.sy, out.get('L3')!.sy];
     expect(sy[0]).toBeLessThan(sy[1]);

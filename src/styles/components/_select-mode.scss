@@ -1,37 +1,37 @@
 @use '../variables' as *;
 
-// ── Select mode ──────────────────────────────────────────────
+// -- Select mode ----------------------------------------------
 //
 // Multi-select on the canvas: lasso-drag to box-select (devices whose
 // centers fall inside the rect), click to toggle a device in/out of the
-// selection. Right-click on a selected device → Copy / Duplicate / Delete
-// Selection; right-click on empty canvas → Paste / Select All / Clear.
+// selection. Right-click on a selected device -> Copy / Duplicate / Delete
+// Selection; right-click on empty canvas -> Paste / Select All / Clear.
 //
 // Distinct color treatment from connect mode (the gateway-blue accent)
 // so a glance at the canvas tells you which mode you're in.
 
-// Accent color reused throughout — pinned here so the canvas glow,
+// Accent color reused throughout - pinned here so the canvas glow,
 // indicator pill, toolbar pill, and multi-selected card glow stay coherent.
 $select-accent: rgb(120, 200, 200);
 
-// ── Select-mode global state ─────────────────────────────────
+// -- Select-mode global state ---------------------------------
 
 #app.select-mode-on {
   #canvas {
     cursor: crosshair;
-    // Cyan inner glow — distinct from connect mode's white wash.
+    // Cyan inner glow - distinct from connect mode's white wash.
     box-shadow:
       inset 0 0 0 2px rgba(120, 200, 200, 0.55),
       inset 0 0 80px rgba(120, 200, 200, 0.10);
   }
 
-  // Drop the non-anchor softening — every card is a click target here.
+  // Drop the non-anchor softening - every card is a click target here.
   .device {
     opacity: 1;
   }
 }
 
-// ── Multi-selected card ──────────────────────────────────────
+// -- Multi-selected card --------------------------------------
 //
 // Cyan glow + cyan border. Distinct from `.selected` (the single-select
 // panel-anchor, which uses the device's type accent color). A card can
@@ -42,7 +42,7 @@ $select-accent: rgb(120, 200, 200);
   box-shadow: 0 0 24px 3px rgba(120, 200, 200, 0.45);
 }
 
-// ── Lasso rectangle ──────────────────────────────────────────
+// -- Lasso rectangle ------------------------------------------
 //
 // Drawn inside the #connections SVG (same coord system as device
 // positions). Semi-transparent fill + dashed stroke; non-interactive so
@@ -58,7 +58,7 @@ $select-accent: rgb(120, 200, 200);
   vector-effect: non-scaling-stroke;
 }
 
-// ── Indicator pill — top center ──────────────────────────────
+// -- Indicator pill - top center ------------------------------
 
 #select-indicator {
   position: fixed;
@@ -93,7 +93,7 @@ $select-accent: rgb(120, 200, 200);
   white-space: nowrap;
 }
 
-// ── Toolbar pill ─────────────────────────────────────────────
+// -- Toolbar pill ---------------------------------------------
 //
 // Mirrors `#connect-toggle` (in _connect-bar.scss) but tinted with the
 // select accent so the active state is unmistakable.

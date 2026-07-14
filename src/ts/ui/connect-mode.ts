@@ -1,33 +1,33 @@
 /**
- * Connect mode — three sub-modes for wiring devices, tap-tap style.
+ * Connect mode - three sub-modes for wiring devices, tap-tap style.
  *
  * Sub-modes (sticky in-session, default Hub, reset on reload):
  *
- *   Hub      — anchor stays on the source. Tap A, tap B, tap C → A↔B, A↔C, …
+ *   Hub      - anchor stays on the source. Tap A, tap B, tap C -> A↔B, A↔C, ...
  *              (one-to-many: a switch fanning out to endpoints)
- *   Single   — no persistent anchor. Tap A, tap B → A↔B → state resets to idle.
+ *   Single   - no persistent anchor. Tap A, tap B -> A↔B -> state resets to idle.
  *              Next tap starts a fresh connection.
- *   Advanced — same gestures as Single, but the connection editor opens
+ *   Advanced - same gestures as Single, but the connection editor opens
  *              immediately after each commit.
  *
  * Mechanics shared across all modes:
  *
- *   off ──(toggle)── idle ──(tap device)── anchored ──(tap handle)── side-picked
+ *   off --(toggle)-- idle --(tap device)-- anchored --(tap handle)-- side-picked
  *                            │   ▲                    │   ▲                │
  *                            │   │(unpin)             │   │(unpick)        │
- *                            └───┘                    └───┘                │
+ *                            └---┘                    └---┘                │
  *                                                      │                   │
- *                            (tap target — auto sides) │                   │ (tap target —
+ *                            (tap target - auto sides) │                   │ (tap target -
  *                                                      │                   │  explicit side)
  *                                                      ▼                   ▼
- *                                                   commit → branch on sub-mode
+ *                                                   commit -> branch on sub-mode
  *
- *   - Tap on empty canvas drops back one step (side-picked → anchored,
- *     anchored → idle).
- *   - Tap on the anchor cancels (anchored → idle), in any sub-mode.
+ *   - Tap on empty canvas drops back one step (side-picked -> anchored,
+ *     anchored -> idle).
+ *   - Tap on the anchor cancels (anchored -> idle), in any sub-mode.
  *   - Esc and the toolbar button exit the mode entirely.
  *
- * No dragging anywhere — same gesture across mouse and touch.
+ * No dragging anywhere - same gesture across mouse and touch.
  */
 
 import { getState, setState } from '../state';
@@ -53,7 +53,7 @@ type ConnectState =
 let state: ConnectState = { mode: 'off' };
 let subMode: SubMode = 'hub';
 
-// Ghost preview line — shown while an anchor is set, follows the cursor and
+// Ghost preview line - shown while an anchor is set, follows the cursor and
 // snaps to the hovered device's center when one is under the pointer.
 let ghostLine: SVGLineElement | null = null;
 let lastPointer: { x: number; y: number } | null = null;
@@ -96,7 +96,7 @@ export function initConnectMode(): void {
 
   // Renderer fires this after every render so we can re-mount the anchor
   // handles when device DOM is rebuilt. Also defensive: if the anchored
-  // device was deleted (right-click → Delete, map switch, undo, …), drop
+  // device was deleted (right-click -> Delete, map switch, undo, ...), drop
   // back to idle so the next tap doesn't commit a link with a dangling id.
   document.addEventListener('netgraph:after-render', () => {
     if (state.mode === 'anchored' || state.mode === 'side-picked') {
@@ -111,7 +111,7 @@ export function initConnectMode(): void {
 
   // Track cursor while in connect mode so the ghost line can follow it.
   // Note: on touch, pointermove only fires while a finger is down, so the
-  // ghost is effectively mouse-only between taps. That's by design — there's
+  // ghost is effectively mouse-only between taps. That's by design - there's
   // no hover state on touch to chase.
   canvasEl?.addEventListener('pointermove', (e) => {
     if (state.mode === 'off') return;
@@ -119,7 +119,7 @@ export function initConnectMode(): void {
     updateGhost();
   });
 
-  // Empty-canvas tap → step back: side-picked → anchored, anchored → idle.
+  // Empty-canvas tap -> step back: side-picked -> anchored, anchored -> idle.
   // Device clicks `stopPropagation`, so this only fires for genuine empty hits.
   canvasEl?.addEventListener('click', (e) => {
     if (state.mode === 'off') return;
@@ -151,20 +151,20 @@ export function tryHandleDeviceClick(deviceId: string, clientX: number, clientY:
 
   const anchorId = state.anchorId;
   if (deviceId === anchorId) {
-    // Tapping the anchor cancels — back to idle (mode still on)
+    // Tapping the anchor cancels - back to idle (mode still on)
     state = { mode: 'idle' };
     applyState();
     return true;
   }
 
-  // Reject duplicate connections — if A↔B already exists (in either direction),
+  // Reject duplicate connections - if A↔B already exists (in either direction),
   // the click is consumed but no link is created. The ghost line already
   // signals this in amber so the rejection isn't surprising.
   if (linkExists(getActiveMap(getState()).links, anchorId, deviceId)) {
     return true;
   }
 
-  // Tap on a *different* device — commit a connection. Source side is the
+  // Tap on a *different* device - commit a connection. Source side is the
   // picked handle (if any), target side is the edge of the target closest to
   // the tap point. Auto for unset sides.
   const targetEl = document.querySelector<HTMLElement>(`.device[data-device-id="${deviceId}"]`);
@@ -174,7 +174,7 @@ export function tryHandleDeviceClick(deviceId: string, clientX: number, clientY:
 
   // Branch on sub-mode for what happens next
   if (subMode === 'hub') {
-    // Anchor stays — ready for the next target. Drop side-picked back to anchored.
+    // Anchor stays - ready for the next target. Drop side-picked back to anchored.
     state = { mode: 'anchored', anchorId };
   } else {
     // Single + Advanced: no persistent anchor. Each connection is a fresh pair.
@@ -191,7 +191,7 @@ export function tryHandleDeviceClick(deviceId: string, clientX: number, clientY:
 function toggleMode(): void {
   const turningOn = state.mode === 'off';
   if (turningOn) {
-    // Mutually exclusive with select mode — only one canvas-level mode at a time.
+    // Mutually exclusive with select mode - only one canvas-level mode at a time.
     document.dispatchEvent(new CustomEvent('netgraph:enter-connect-mode'));
   }
   state = turningOn ? { mode: 'idle' } : { mode: 'off' };
@@ -217,7 +217,7 @@ export function isConnectModeOn(): boolean {
   return state.mode !== 'off';
 }
 
-/** External exit hook — used by select-mode to enforce mutual exclusion. */
+/** External exit hook - used by select-mode to enforce mutual exclusion. */
 export function exitConnectMode(): void {
   if (state.mode !== 'off') exitMode();
 }
@@ -242,11 +242,11 @@ function updateIndicator(): void {
 
 function statusText(): string {
   if (state.mode === 'idle' || state.mode === 'off') {
-    return 'Connection mode — tap a device to start';
+    return 'Connection mode - tap a device to start';
   }
   const name = anchorName(state.anchorId);
   if (state.mode === 'side-picked') {
-    return `Source side picked on ${name} — tap a target`;
+    return `Source side picked on ${name} - tap a target`;
   }
   switch (subMode) {
     case 'hub':
@@ -297,7 +297,7 @@ function onHandleClick(e: MouseEvent): void {
   e.preventDefault();
   const side = (e.currentTarget as HTMLElement).dataset.side as LinkSide;
   if (state.mode === 'side-picked' && state.sourceSide === side) {
-    // Tap the picked handle again — unpick it
+    // Tap the picked handle again - unpick it
     state = { mode: 'anchored', anchorId: state.anchorId };
   } else {
     state = { mode: 'side-picked', anchorId: state.anchorId, sourceSide: side };
@@ -319,12 +319,12 @@ function closestSideToClient(deviceEl: HTMLElement, clientX: number, clientY: nu
   return 'right';
 }
 
-// ── Ghost preview line ───────────────────────────────────────
+// -- Ghost preview line ---------------------------------------
 //
 // Drawn inside the #connections SVG (same coord system as device positions,
 // since both live under #canvas-transform). Source = anchor center, target =
 // cursor position in canvas coords, or the hovered device's center if any.
-// Pure visual feedback — it doesn't affect the committed connection.
+// Pure visual feedback - it doesn't affect the committed connection.
 
 function updateGhost(): void {
   if ((state.mode !== 'anchored' && state.mode !== 'side-picked') || lastPointer === null) {
@@ -344,7 +344,7 @@ function updateGhost(): void {
   const ax = parseInt(anchorEl.style.left) || 0;
   const ay = (parseInt(anchorEl.style.top) || 0) + anchorEl.offsetHeight / 2;
 
-  // Cursor → canvas-transform coords
+  // Cursor -> canvas-transform coords
   const cursor = screenToCanvas(lastPointer.x, lastPointer.y);
   let tx = cursor.x;
   let ty = cursor.y;

@@ -1,7 +1,7 @@
 import type { DeviceType } from './types';
 import { Router, Network, Wifi, Server, Box, Laptop, RadioTower } from 'lucide-static';
 
-// ── Device type metadata ─────────────────────────────────────
+// -- Device type metadata -------------------------------------
 
 /**
  * Default icon for each device type. Rendered when `device.iconId` is unset.
@@ -42,9 +42,9 @@ export const DEVICE_TYPES: DeviceType[] = [
 /** Maximum length of the per-device notes field. Notes are a memo, not an essay. */
 export const MAX_NOTES_LENGTH = 1000;
 
-// ── Device card sizing ───────────────────────────────────────
+// -- Device card sizing ---------------------------------------
 
-/** Preset device card widths. Default (1×) is what the SCSS sets. */
+/** Preset device card widths. Default (1x) is what the SCSS sets. */
 export const DEVICE_WIDTH_PRESETS = [
   { value: 204, label: 'Normal' },
   { value: 408, label: 'Wide' },

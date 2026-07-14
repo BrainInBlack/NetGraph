@@ -16,11 +16,11 @@ import { parseMap, parseCustomIcons, isObject } from './parse-shapes';
 
 const EXPORT_VERSION = 1;
 
-// Files larger than this are rejected outright — well above any realistic
+// Files larger than this are rejected outright - well above any realistic
 // real-world export.
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 
-// ── Export ───────────────────────────────────────────────────
+// -- Export ---------------------------------------------------
 
 export interface SingleMapExport {
   version: number;
@@ -86,13 +86,13 @@ function referencedCustomIconIds(map: NetworkMap): Set<string> {
   return out;
 }
 
-// ── Import / parse ───────────────────────────────────────────
+// -- Import / parse -------------------------------------------
 
 export interface ParsedImport {
   kind: 'map' | 'bundle';
   /** Maps to import (one for kind='map', N for kind='bundle'). */
   maps: NetworkMap[];
-  /** Bundle's activeMapId if applicable — used when the user picks "replace everything". */
+  /** Bundle's activeMapId if applicable - used when the user picks "replace everything". */
   activeMapId?: string;
   /** Custom icons referenced by the maps, with their original IDs preserved. */
   customIcons: CustomIcon[];
@@ -110,8 +110,8 @@ export class ImportError extends Error {
  * shape, value coercion, capping. Throws ImportError on any rejection so the
  * caller can show a single actionable message.
  *
- * The parsed structure is *internally consistent* — any link or hostId that
- * pointed at a missing device is stripped — but icon name/ID conflicts with
+ * The parsed structure is *internally consistent* - any link or hostId that
+ * pointed at a missing device is stripped - but icon name/ID conflicts with
  * the user's existing library are NOT resolved here. That's the next layer
  * up's job.
  */
@@ -127,7 +127,7 @@ export function parseImport(text: string): ParsedImport {
     throw new ImportError('File is not valid JSON.');
   }
 
-  if (!isObject(raw)) throw new ImportError('Unexpected file shape — root must be an object.');
+  if (!isObject(raw)) throw new ImportError('Unexpected file shape - root must be an object.');
   if (raw.version !== EXPORT_VERSION) {
     throw new ImportError(`Unsupported file version: ${raw.version}. Expected ${EXPORT_VERSION}.`);
   }
@@ -153,7 +153,7 @@ export function parseImport(text: string): ParsedImport {
   throw new ImportError(`Unknown export kind: "${String(raw.kind)}".`);
 }
 
-// ── Helpers ──────────────────────────────────────────────────
+// -- Helpers --------------------------------------------------
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;

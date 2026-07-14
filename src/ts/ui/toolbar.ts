@@ -14,7 +14,7 @@ export function initToolbar(): void {
     const open = !dropdown.classList.contains('hidden');
     dropdown.classList.toggle('hidden', open);
     btn.classList.toggle('open', !open);
-    // Opening the toolbar dropdown is a "leave the current device" gesture —
+    // Opening the toolbar dropdown is a "leave the current device" gesture -
     // close the detail panel and clear selection so the user isn't left with
     // a stale panel hovering next to an unrelated menu.
     if (!open) {
@@ -23,7 +23,7 @@ export function initToolbar(): void {
     }
   });
 
-  // Bundle export confirmation — fired by the filename modal in modals.ts
+  // Bundle export confirmation - fired by the filename modal in modals.ts
   document.addEventListener('netgraph:export-bundle-confirmed', ((e: CustomEvent) => {
     const filename = e.detail?.filename ?? 'netgraph-backup';
     downloadJson(filename, exportBundle(getState()));
@@ -55,11 +55,11 @@ export function renderDropdown(): void {
     <div class="map-sep"></div>
     <div class="map-action" data-action="new-map"><span class="map-action-icon">＋</span>New Map</div>
     <div class="map-sep"></div>
-    <div class="map-action" data-action="import"><span class="map-action-icon">⬇</span>Import…</div>
+    <div class="map-action" data-action="import"><span class="map-action-icon">⬇</span>Import...</div>
     <div class="map-action" data-action="export-map"><span class="map-action-icon">⬆</span>Export Active Map</div>
     <div class="map-action" data-action="export-bundle"><span class="map-action-icon">⬆</span>Export All (Backup)</div>
     <div class="map-sep"></div>
-    <div class="map-action" data-action="manage-icons"><span class="map-action-icon">✦</span>Manage Icons…</div>
+    <div class="map-action" data-action="manage-icons"><span class="map-action-icon">✦</span>Manage Icons...</div>
     ${__WEB_BUILD__ ? `
     <div class="map-sep"></div>
     <div class="map-action" data-action="download-app"><span class="map-action-icon">⤓</span>Download Offline Copy</div>
@@ -161,7 +161,7 @@ export function renderDropdown(): void {
     });
   });
 
-  // New map — dispatch event so modals.ts shows the prompt
+  // New map - dispatch event so modals.ts shows the prompt
   dropdown.querySelector('[data-action="new-map"]')?.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.add('hidden');
@@ -177,7 +177,7 @@ export function renderDropdown(): void {
     pickAndImport();
   });
 
-  // Export — active map (with referenced custom icons inlined)
+  // Export - active map (with referenced custom icons inlined)
   dropdown.querySelector('[data-action="export-map"]')?.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.add('hidden');
@@ -187,7 +187,7 @@ export function renderDropdown(): void {
     downloadJson(map.name, exportMap(map, state.customIcons ?? []));
   });
 
-  // Export — full bundle (opens a dialog for filename so multiple backups
+  // Export - full bundle (opens a dialog for filename so multiple backups
   // don't overwrite each other in the user's Downloads folder)
   dropdown.querySelector('[data-action="export-bundle"]')?.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -204,7 +204,7 @@ export function renderDropdown(): void {
     document.dispatchEvent(new CustomEvent('netgraph:manage-icons'));
   });
 
-  // Download Offline Copy — present only on the deployed web build
+  // Download Offline Copy - present only on the deployed web build
   dropdown.querySelector('[data-action="download-app"]')?.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.add('hidden');
@@ -216,7 +216,7 @@ export function renderDropdown(): void {
 /**
  * Download the self-contained single-file build (`download/netgraph.html`).
  * It's fetched and re-wrapped as an `application/octet-stream` blob so the
- * browser always saves it — an octet-stream can't be rendered as a page, so
+ * browser always saves it - an octet-stream can't be rendered as a page, so
  * there's no risk of navigating to the HTML instead of downloading it.
  */
 async function downloadOfflineCopy(): Promise<void> {

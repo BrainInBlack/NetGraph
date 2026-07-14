@@ -48,8 +48,8 @@ function pushPast(
 
 /**
  * Obstacle-edge coordinates sorted by distance from `mid`, used as detour-leg
- * candidates. `vertical` true → returns y-coordinates (top/bottom edges);
- * false → x-coordinates (left/right edges).
+ * candidates. `vertical` true -> returns y-coordinates (top/bottom edges);
+ * false -> x-coordinates (left/right edges).
  */
 function collectCandidates(obstacles: Rect[], pad: number, mid: number, vertical: boolean): number[] {
   const candidates: number[] = [];
@@ -153,16 +153,16 @@ function detourL(
 
 /**
  * Route a connection from (x1,y1) to (x2,y2) avoiding obstacle cards. Tries
- * default path → bend-nudge → multi-segment detour.
+ * default path -> bend-nudge -> multi-segment detour.
  *
  * Returns the chosen path plus `collides`: false when the path is fully clear,
  * true when nothing cleared (fallback to the default path) or a detour still
- * grazes a card. The caller uses `collides` directly — no need to re-scan.
+ * grazes a card. The caller uses `collides` directly - no need to re-scan.
  *
  * `allRects` is every device rect on the map; the two endpoint rects are
  * skipped by reference so the line may start/end inside its own cards.
  *
- * Special case — **face-away geometry**: when the chosen sides share an axis
+ * Special case - **face-away geometry**: when the chosen sides share an axis
  * and point in directions that would put the Z-shape bend *inside* the cards
  * (e.g. source='left' + target='right' with the target physically to the
  * right of the source), the default path is geometrically broken. We detect
@@ -205,7 +205,7 @@ export function routeConnection(
 
   // A successful nudge is validated collision-free against every obstacle, so
   // `collides` is known false. A detour only validates its inner segments, so
-  // its end legs may still graze a card — scan once to be sure.
+  // its end legs may still graze a card - scan once to be sure.
   if (sameAxis) {
     if (defaultSegs.length === 3) {
       const defaultBend = horizontal ? defaultSegs[1].x1 : defaultSegs[1].y1;

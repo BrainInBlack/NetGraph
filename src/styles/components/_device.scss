@@ -6,7 +6,7 @@
   pointer-events: none;
 }
 
-// ── Base card ─────────────────────────────────────────────────
+// -- Base card -------------------------------------------------
 
 .device {
   pointer-events: auto;
@@ -24,7 +24,7 @@
   // which is CSS-`scale()`d for zoom. Animating a card's transform forced WebKit
   // to re-rasterize the whole scaled parent (every other card) into one texture,
   // blurring sibling text on 1x/non-Retina displays during the transition.
-  // Hover/selected feedback is the border-color tint + selected glow below — no
+  // Hover/selected feedback is the border-color tint + selected glow below - no
   // lift, so nothing animates transform inside the scaled layer.
   transition: box-shadow $dur-fast, border-color $dur-fast;
 
@@ -33,7 +33,7 @@
   }
 }
 
-// ── Per-type borders, hover, selected ─────────────────────────
+// -- Per-type borders, hover, selected -------------------------
 
 @each $type, $color in $device-colors {
   .device.#{$type} {
@@ -53,7 +53,7 @@
   }
 }
 
-// ── Card header ───────────────────────────────────────────────
+// -- Card header -----------------------------------------------
 
 .device-header {
   padding: 11px 12px 10px;
@@ -110,7 +110,7 @@
   text-transform: uppercase;
 }
 
-// ── Host indicator (VMs/containers on a parent) ───────────────
+// -- Host indicator (VMs/containers on a parent) ---------------
 
 .device-host {
   display: flex;
@@ -130,7 +130,7 @@
   flex-shrink: 0;
 }
 
-// ── Card meta (IP + domain) ──────────────────────────────────
+// -- Card meta (IP + domain) ----------------------------------
 
 .device-meta {
   padding: 7px 12px 8px;
@@ -156,7 +156,7 @@
   margin-top: 4px;
 }
 
-// ── Card footer (tags) ──────────────────────────────────────
+// -- Card footer (tags) --------------------------------------
 
 .device-footer {
   padding: 7px 12px 9px;
@@ -166,10 +166,10 @@
   gap: 6px;
 }
 
-// ── Wide layout ──────────────────────────────────────────────
+// -- Wide layout ----------------------------------------------
 //
 // When a card's width is bumped above the default, switch from a stacked
-// (header → meta → footer) layout to a side-by-side one where the IP/domain
+// (header -> meta -> footer) layout to a side-by-side one where the IP/domain
 // sit to the right of the name/type, right-aligned. The footer stays full-width
 // below.
 .device.wide {

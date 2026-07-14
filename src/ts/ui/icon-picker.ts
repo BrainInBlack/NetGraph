@@ -20,7 +20,7 @@ let backdropBound = false;
 let releaseTrap: (() => void) | null = null;
 
 export function openIconPicker(opts: OpenOptions): void {
-  if (activeOptions) return; // already open — ignore re-entrance
+  if (activeOptions) return; // already open - ignore re-entrance
   activeOptions = opts;
   const overlay = ensureOverlay();
   // Backdrop click handler is bound exactly once. bindEvents() runs after

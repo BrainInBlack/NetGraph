@@ -12,13 +12,13 @@ import { showCanvasContextMenu, showDeviceContextMenu, showConnectionContextMenu
 import { openIconManager } from './ui/icon-manager';
 import { createLongPress } from './util';
 
-// ── Init ─────────────────────────────────────────────────────
+// -- Init -----------------------------------------------------
 
 function init(): void {
   const versionEl = document.getElementById('brand-version');
   if (versionEl) versionEl.textContent = `v${__APP_VERSION__}`;
 
-  // Wire device interaction hooks (renderer → UI)
+  // Wire device interaction hooks (renderer -> UI)
   setHooks({
     onDeviceClick(deviceId: string, clientX: number, clientY: number) {
       hideAllMenus();
@@ -58,7 +58,7 @@ function init(): void {
   initSelectMode();
   initHelp();
 
-  // Canvas click → deselect
+  // Canvas click -> deselect
   const canvas = document.getElementById('canvas')!;
   canvas.addEventListener('click', (e) => {
     if (e.target === canvas || e.target === document.getElementById('canvas-transform')) {
@@ -68,7 +68,7 @@ function init(): void {
     }
   });
 
-  // Canvas right-click → context menu (mouse). For touch, see long-press below.
+  // Canvas right-click -> context menu (mouse). For touch, see long-press below.
   canvas.addEventListener('contextmenu', (e) => {
     if ((e.target as HTMLElement).closest('.device')) return;
     if ((e.target as Element).closest?.('.conn-group')) return;
@@ -77,7 +77,7 @@ function init(): void {
     showCanvasContextMenu(e.clientX, e.clientY);
   });
 
-  // Canvas long-press (touch) → context menu. Skips device/connection targets
+  // Canvas long-press (touch) -> context menu. Skips device/connection targets
   // since those have their own long-press handlers.
   const canvasLongPress = createLongPress();
   canvas.addEventListener('pointerdown', (e) => {
@@ -102,7 +102,7 @@ function init(): void {
   // Manage Icons (toolbar dropdown entry)
   document.addEventListener('netgraph:manage-icons', () => openIconManager());
 
-  // Global click → dismiss menus
+  // Global click -> dismiss menus
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     if (!target.closest('.ctx-menu') && !target.closest('#map-selector-btn') && !target.closest('#map-dropdown')) {
@@ -123,7 +123,7 @@ function init(): void {
   // Center the existing content in the viewport on load (without zooming)
   centerContent();
 
-  // First paint can race ahead of CSS/font readiness — when that happens,
+  // First paint can race ahead of CSS/font readiness - when that happens,
   // device cards measure with the wrong size and connection paths get pinned
   // to bad geometry until something forces a re-render. Re-route once fonts
   // settle and once the window finishes loading so paths recover without a

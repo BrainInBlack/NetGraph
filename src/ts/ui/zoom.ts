@@ -3,7 +3,7 @@ import { isSelectModeOn } from './select-mode';
 const ZOOM_STEPS = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200];
 const MIN_ZOOM = 10;
 const MAX_ZOOM = 400;
-// Grid sizes at 100% zoom — must match $grid-sm / $grid-lg in _variables.scss
+// Grid sizes at 100% zoom - must match $grid-sm / $grid-lg in _variables.scss
 const GRID_SM = 24;
 const GRID_LG = 120;
 
@@ -55,13 +55,13 @@ export function initZoom(): void {
   });
 
   // Zoom-level button: click anywhere on the pill fits content to the viewport.
-  // Hover swap (% → "Fit") is pure CSS — see _zoom-bar.scss.
+  // Hover swap (% -> "Fit") is pure CSS - see _zoom-bar.scss.
   document.getElementById('zoom-level')!.addEventListener('click', (e) => {
     e.stopPropagation();
     fitToContent();
   });
 
-  // ── Canvas panning + pinch-zoom via pointer events ────────
+  // -- Canvas panning + pinch-zoom via pointer events --------
   //
   // We use pointer events instead of mouse events so the same code handles
   // mouse, trackpad, and touch. Two-finger gestures on touch are detected by
@@ -87,7 +87,7 @@ export function initZoom(): void {
     if (e.button !== 0 && e.pointerType === 'mouse') return; // only primary mouse button
     const target = e.target as Element;
     // Skip targets that have their own pointer handlers (devices, connection
-    // lines, context menus) — without this, a tap on a connection would also
+    // lines, context menus) - without this, a tap on a connection would also
     // prime a pan, doing extra work for nothing.
     if (target.closest?.('.device')) return;
     if (target.closest?.('.conn-group')) return;
@@ -96,9 +96,9 @@ export function initZoom(): void {
     activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     if (activePointers.size === 1) {
-      // First finger / mouse down — prime a pan, but don't classify as one yet.
+      // First finger / mouse down - prime a pan, but don't classify as one yet.
       // (We always record the start point, even in select mode where pan is
-      // suppressed — the *move* handler reads `isSelectModeOn()` to decide
+      // suppressed - the *move* handler reads `isSelectModeOn()` to decide
       // whether to actually pan. Recording it unconditionally keeps panStartX
       // fresh so an out-of-mode pan can't jump from a stale anchor.)
       panning = false;
@@ -107,7 +107,7 @@ export function initZoom(): void {
       panOriginX = panX;
       panOriginY = panY;
     } else if (activePointers.size === 2) {
-      // Second finger — switch to pinch-zoom. Abandon any in-flight pan.
+      // Second finger - switch to pinch-zoom. Abandon any in-flight pan.
       panning = false;
       canvas.classList.remove('panning');
       const [a, b] = [...activePointers.values()];
@@ -121,7 +121,7 @@ export function initZoom(): void {
     activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     if (activePointers.size >= 2) {
-      // Pinch — adjust zoom anchored on the midpoint between the two pointers
+      // Pinch - adjust zoom anchored on the midpoint between the two pointers
       const pts = [...activePointers.values()];
       const dist = distance(pts[0], pts[1]);
       if (pinchStartDistance > 0) {
@@ -214,7 +214,7 @@ export function getPan(): { x: number; y: number } {
 
 /**
  * Convert a viewport-space point (clientX/Y) into canvas-transform-space
- * coordinates — the same coord system that holds device positions and the
+ * coordinates - the same coord system that holds device positions and the
  * connections SVG. Returns (0, 0) if the canvas element isn't mounted.
  */
 export function screenToCanvas(clientX: number, clientY: number): { x: number; y: number } {
@@ -268,7 +268,7 @@ function getContentBounds(): { minX: number; minY: number; maxX: number; maxY: n
 /**
  * Fit all devices into the viewport with padding, then apply the transform
  * in one go. Exposed so external callers (the zoom-level button, select
- * mode entry — where pan is disabled and a wide overview is more useful
+ * mode entry - where pan is disabled and a wide overview is more useful
  * than the user's prior tight zoom) can trigger a fit without re-implementing
  * the math or remembering to call `applyTransform` after.
  *

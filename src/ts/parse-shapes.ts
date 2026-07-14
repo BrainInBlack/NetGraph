@@ -2,8 +2,8 @@
  * Shape parsers + validators for the persisted data model.
  *
  * Used in two places that previously had near-duplicate copies:
- *   - `storage.ts migrate*` — loading from localStorage at startup
- *   - `import-export.ts parse*` — accepting a JSON file the user uploaded
+ *   - `storage.ts migrate*` - loading from localStorage at startup
+ *   - `import-export.ts parse*` - accepting a JSON file the user uploaded
  *
  * Both flows need the same defensive treatment: unknown extra fields pass
  * through, missing required fields fail (return null), out-of-bounds values
@@ -45,7 +45,7 @@ const NAMED_PORT_VALUES = new Set<NamedPort>(NAMED_PORTS);
 // switches sold today; anything bigger is almost certainly garbage.
 const MAX_PORT_NUMBER = 256;
 
-// ── Public parsers ───────────────────────────────────────────
+// -- Public parsers -------------------------------------------
 
 export function parseMap(raw: unknown): NetworkMap | null {
   if (!isObject(raw)) return null;
@@ -166,7 +166,7 @@ export function parseCustomIcons(raw: unknown): CustomIcon[] {
     .filter(Boolean) as CustomIcon[];
 }
 
-// ── Helpers ──────────────────────────────────────────────────
+// -- Helpers --------------------------------------------------
 
 export function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -174,9 +174,9 @@ export function isObject(v: unknown): v is Record<string, unknown> {
 
 // IDs are app-internal crypto.randomUUID() values. Imported IDs are only used
 // as transient keys (the map id is regenerated on import; device/link ids are
-// kept verbatim), so a strict format check is enough — and it must be strict,
+// kept verbatim), so a strict format check is enough - and it must be strict,
 // because these ids are interpolated raw into data-* attributes in the
-// sidebar/toolbar. An id like `x" onmouseover="…` would otherwise break out of
+// sidebar/toolbar. An id like `x" onmouseover="...` would otherwise break out of
 // the attribute and execute. Reject anything outside the safe alphabet.
 const ID_PATTERN = /^[a-zA-Z0-9_\-:]{1,128}$/;
 function validateId(v: unknown): string | null {
@@ -208,7 +208,7 @@ function parseLinkSide(v: unknown): LinkSide | undefined {
 }
 
 /**
- * A port is either a positive integer ≤ MAX_PORT_NUMBER or one of NAMED_PORTS.
+ * A port is either a positive integer <= MAX_PORT_NUMBER or one of NAMED_PORTS.
  * Numbers stored as strings (e.g. "3" from a hand-edited JSON file) are
  * coerced. Everything else is rejected.
  */
@@ -216,7 +216,7 @@ function parseLinkPort(v: unknown): LinkPort | undefined {
   if (typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= MAX_PORT_NUMBER) return v;
   if (typeof v === 'string') {
     if (NAMED_PORT_VALUES.has(v as NamedPort)) return v as NamedPort;
-    // Numeric string — coerce
+    // Numeric string - coerce
     if (/^\d+$/.test(v)) {
       const n = Number(v);
       if (Number.isInteger(n) && n >= 1 && n <= MAX_PORT_NUMBER) return n;

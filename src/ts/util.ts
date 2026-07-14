@@ -26,7 +26,7 @@ export function snapToGrid(value: number): number {
  *
  * The naive `e.target === overlay` check fires for both a genuine backdrop
  * click AND the synthetic click that follows a mousedown-inside / mouseup-
- * outside drag — because the click event bubbles to the common ancestor.
+ * outside drag - because the click event bubbles to the common ancestor.
  * We track where the pointer first went down and only dismiss when both the
  * pointerdown and the eventual click landed on the overlay itself.
  *
@@ -51,8 +51,8 @@ export function bindOverlayDismiss(overlay: HTMLElement, dismiss: () => void): v
  * synthesizes a click() so the existing click handler updates aria-checked
  * (we don't duplicate that logic here).
  *
- * Wraps at both ends. Doesn't touch tabindex — Tab still walks each radio,
- * which is fine for the small (2–3 option) groups we use this on. For the
+ * Wraps at both ends. Doesn't touch tabindex - Tab still walks each radio,
+ * which is fine for the small (2-3 option) groups we use this on. For the
  * strict ARIA roving-tabindex pattern, a future caller would manage tabindex
  * inside its click handler.
  */
@@ -88,7 +88,7 @@ export function bindRadioGroupKeys(container: HTMLElement, radioSelector: string
   });
 }
 
-/** Fresh random ID. Wraps `crypto.randomUUID` — kept centralized in case we
+/** Fresh random ID. Wraps `crypto.randomUUID` - kept centralized in case we
  *  need to swap impls (older browsers, deterministic test mode, etc.). */
 export function generateId(): string {
   return crypto.randomUUID();
@@ -104,7 +104,7 @@ export function escapeHtml(s: string): string {
     .replace(/'/g, '&#39;');
 }
 
-/** Run after the next paint — more reliable than setTimeout(0/50) for focusing freshly inserted inputs. */
+/** Run after the next paint - more reliable than setTimeout(0/50) for focusing freshly inserted inputs. */
 export function nextFrame(fn: () => void): void {
   requestAnimationFrame(() => requestAnimationFrame(fn));
 }
@@ -197,7 +197,7 @@ export function trapFocus(container: HTMLElement): () => void {
 
 /**
  * Long-press detector for touch interactions. Returns helpers for the three
- * lifecycle moments — start, move, end — that the caller wires into their
+ * lifecycle moments - start, move, end - that the caller wires into their
  * pointer handlers. The callback fires once after `delay` ms if the user
  * hasn't lifted off or moved past `moveThreshold` pixels.
  *
@@ -245,7 +245,7 @@ export function createLongPress(
 }
 
 /**
- * Typed querySelector. Throws if no element matches — in code where the
+ * Typed querySelector. Throws if no element matches - in code where the
  * markup is controlled by the same module (e.g. a modal we just rendered),
  * a miss indicates a bug, not a runtime condition to handle.
  *

@@ -1,5 +1,5 @@
 /**
- * Help pop-out — a non-modal slide-in reference panel, toggled by the
+ * Help pop-out - a non-modal slide-in reference panel, toggled by the
  * bottom-left "?" button. Coexists with the canvas and the detail panel
  * (opposite edges), so it does not take a modal lock or trap focus.
  */
