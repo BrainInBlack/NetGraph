@@ -40,7 +40,7 @@ export function renderConnections(links: Link[], devices: Device[]): void {
 
   // Cache device geometry once per render. Without this, computeEndpointOffsets
   // and the main loop would each call document.querySelector multiple times
-  // per link — quadratic-ish under load. The cache reduces it to one DOM read
+  // per link - quadratic-ish under load. The cache reduces it to one DOM read
   // per device per frame.
   const geomCache = new Map<string, DeviceGeom>();
   const geom = (d: Device): DeviceGeom => {
@@ -54,7 +54,7 @@ export function renderConnections(links: Link[], devices: Device[]): void {
 
   const offsets = computeEndpointOffsets(links, deviceMap, geom);
 
-  // One Rect per device per render — the collision check needs these for every
+  // One Rect per device per render - the collision check needs these for every
   // link, and allocating fresh inside the per-link loop would churn the GC at
   // 60 fps during drags. `allRects` is the same set as a flat array so
   // routeConnection gets a shared obstacle list instead of one per link.
@@ -70,7 +70,7 @@ export function renderConnections(links: Link[], devices: Device[]): void {
   }
   const allRects = [...rectsByDevice.values()];
 
-  // Index existing connection groups by linkId in a single pass — avoids the
+  // Index existing connection groups by linkId in a single pass - avoids the
   // O(n) per-link querySelector that would otherwise make this O(n²) overall.
   const existing = new Map<string, SVGGElement>();
   svg.querySelectorAll<SVGGElement>('g.conn-group').forEach(el => {
@@ -145,7 +145,7 @@ function createConnectionGroup(svg: SVGSVGElement, link: Link): SVGGElement {
     }));
   });
 
-  // Touch — long-press substitutes for right-click
+  // Touch - long-press substitutes for right-click
   const connLongPress = createLongPress();
   g.addEventListener('pointerdown', (e) => {
     connLongPress.start(e, () => {
@@ -187,7 +187,7 @@ function updateConnectionGroup(
 
   const sg = geom(source);
   const tg = geom(target);
-  // Source/target sides are decided in computeEndpointOffsets — manual
+  // Source/target sides are decided in computeEndpointOffsets - manual
   // overrides or auto-pair. Path renderer takes its overall axis from the
   // source side (so the source's exit direction is honored). When the user
   // sets mismatched sides on different axes, the path still draws as a Z on
@@ -202,7 +202,7 @@ function updateConnectionGroup(
 
   // Compute default bendAt for same-axis (Z-shape) connections, placed in the
   // gap between the cards' facing edges. Mixed-axis (L-shape) paths don't use
-  // it. The face-away case (edges point apart) is left undefined here — route.ts
+  // it. The face-away case (edges point apart) is left undefined here - route.ts
   // detects it and routes a U-shape, ignoring bendAt entirely.
   const sameAxis = axisOf(sourceSide) === axisOf(targetSide);
   const horizontal = axisOf(sourceSide) === 'horizontal';
@@ -219,8 +219,8 @@ function updateConnectionGroup(
       bendAt = (sourceEdgeCoord + targetEdgeCoord) / 2;
 
       // Straighten lined-up cards. If the two cards overlap on the perpendicular
-      // axis — inset by MIN_PERPENDICULAR so the line lands on the flat part of
-      // each edge, not a rounded corner — snap both endpoints to the shared
+      // axis - inset by MIN_PERPENDICULAR so the line lands on the flat part of
+      // each edge, not a rounded corner - snap both endpoints to the shared
       // midpoint so the link draws as a single straight segment instead of a
       // small jog. The tolerated misalignment scales with card size (a tall card
       // overlaps across a wider offset than a short one). Skipped when fan-out

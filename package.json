@@ -2,7 +2,7 @@
   "name": "netgraph",
   "private": true,
   "version": "1.3.0",
-  "description": "Browser-based local network visualizer — map your home or lab network, stored entirely in localStorage with no backend.",
+  "description": "Browser-based local network visualizer - map your home or lab network, stored entirely in localStorage with no backend.",
   "license": "PolyForm-Noncommercial-1.0.0",
   "author": "BrainInBlack <braininblack@gmail.com>",
   "homepage": "https://github.com/BrainInBlack/NetGraph#readme",

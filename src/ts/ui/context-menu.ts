@@ -86,7 +86,7 @@ export function showDeviceContextMenu(x: number, y: number, deviceId: string): v
 
   // When right-clicking a device that's part of a multi-selection, the menu
   // becomes group-centric (Copy / Duplicate / Delete Selection). Right-
-  // clicking a non-selected device — even in select mode — falls back to
+  // clicking a non-selected device - even in select mode - falls back to
   // the per-device menu; that's the escape hatch for "edit this one without
   // disturbing the selection".
   if (isInSelection(deviceId)) {

@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# AI agent tooling — keep each contributor's assistant config local so it never
+# AI agent tooling - keep each contributor's assistant config local so it never
 # pollutes the repo or disrupts anyone else's setup. Add your own tool here if
 # it isn't already listed.
 .claude/
@@ -41,6 +41,8 @@ dist-ssr
 CLAUDE.md
 CLAUDE.local.md
 GEMINI.md
+# Workspace ASCII checker config (tool lives in the git-ignored ../.claude/)
+.asciiignore
 
-# Personal deploy tooling — ties to a specific server, kept out of the repo.
+# Personal deploy tooling - ties to a specific server, kept out of the repo.
 scripts/deploy.sh

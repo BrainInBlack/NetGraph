@@ -3,12 +3,12 @@ import type { Device, Link, NetworkMap } from '../types';
 /**
  * Pure copy/paste helpers for select-mode's clipboard. Kept DOM-free + dep-
  * injected (the caller passes `generateId` and `snapToGrid`) so the logic
- * stays straightforwardly unit-testable — no spying on globals, no fake DOM.
+ * stays straightforwardly unit-testable - no spying on globals, no fake DOM.
  *
  * Rules:
  *   - A clipboard captures every selected device verbatim, plus only those
  *     links whose BOTH endpoints are in the selection. Half-attached links
- *     (one endpoint outside the selection) are dropped — pasting them would
+ *     (one endpoint outside the selection) are dropped - pasting them would
  *     either point to the original device (re-connecting the copy to the
  *     original group, surprising) or dangle (broken state).
  *   - `hostId` follows the same rule: if the host device is in the selection
@@ -22,7 +22,7 @@ export interface Clipboard {
   devices: Device[];
   /** Links whose source AND target are in the selection. Original ids. */
   links: Link[];
-  /** Mean x/y of the selected devices — the paste anchor point. */
+  /** Mean x/y of the selected devices - the paste anchor point. */
   centerX: number;
   centerY: number;
 }
@@ -32,7 +32,7 @@ export interface PastedItems {
   devices: Device[];
   /** Links with sourceId / targetId remapped to the new ids. */
   links: Link[];
-  /** Set of new device ids — convenient to feed back into setSelectedDeviceIds. */
+  /** Set of new device ids - convenient to feed back into setSelectedDeviceIds. */
   newIds: Set<string>;
 }
 
@@ -81,14 +81,14 @@ export function pasteClipboard(
 
   const devices: Device[] = clipboard.devices.map(d => {
     const newId = idMap.get(d.id)!;
-    // hostId follows the intra-selection rule — drop refs to outside devices.
+    // hostId follows the intra-selection rule - drop refs to outside devices.
     const remappedHost = d.hostId ? idMap.get(d.hostId) : undefined;
     // NOTE: `...d` is a shallow spread. `tags` is explicitly re-copied below
-    // because it's an array — without the explicit copy the paste would share
+    // because it's an array - without the explicit copy the paste would share
     // the same array reference as the source. Any FUTURE Device field that's
     // an array, Map, Set, or plain object needs the same treatment here;
     // otherwise pasted devices will silently mutate originals. Today `tags`
-    // is the only such field — keep this list in sync if Device grows.
+    // is the only such field - keep this list in sync if Device grows.
     return {
       ...d,
       id: newId,

@@ -1,7 +1,7 @@
 import type { Device, Link, LinkSide } from '../../types';
 import { axisOf, type Axis } from '../path-geometry';
 
-// ── Device geometry ──────────────────────────────────────────
+// -- Device geometry ------------------------------------------
 
 export interface DeviceGeom {
   center: { x: number; y: number };
@@ -24,7 +24,7 @@ export function readDeviceGeom(device: Device): DeviceGeom {
   };
 }
 
-// ── Endpoint fan-out ─────────────────────────────────────────
+// -- Endpoint fan-out -----------------------------------------
 
 const ENDPOINT_GAP = 6; // Visual separation between lines meeting at the same device
 // Keep fan-out endpoints inset from the card's corners so connections don't
@@ -44,7 +44,7 @@ export type LinkOffset = {
  * device fan out instead of overlapping.
  *
  * Side resolution priority:
- *   1. `link.sourceSide` / `link.targetSide` — manual override always wins.
+ *   1. `link.sourceSide` / `link.targetSide` - manual override always wins.
  *   2. Per-link heuristic: source side = direction toward target on the
  *      dominant axis; target side = opposite.
  *
@@ -62,7 +62,7 @@ export function computeEndpointOffsets(
     end: 'source' | 'target';
     side: LinkSide;
     // Primary key: position of the *other* endpoint along this side's tangent.
-    // (Top/bottom run along X → tangent is X; left/right along Y → tangent is Y.)
+    // (Top/bottom run along X -> tangent is X; left/right along Y -> tangent is Y.)
     sortKey: number;
     // Secondary key: position of the *other* endpoint perpendicular to the
     // tangent, sign-flipped so that when several targets share the primary key
@@ -70,13 +70,13 @@ export function computeEndpointOffsets(
     // targets' depth ordering and the Z-shapes don't cross.
     //
     // For top/bottom sides: secondary = otherY * sign(thisX - otherX).
-    //   Targets to the left of this device → ascending Y first (closer source
-    //   endpoint reaches the nearer target). Targets to the right → reverse.
+    //   Targets to the left of this device -> ascending Y first (closer source
+    //   endpoint reaches the nearer target). Targets to the right -> reverse.
     // For left/right sides: secondary = otherX * sign(thisY - otherY).
     //
     // Degenerate case: when `thisX === otherX` (target directly under source
     // center), sign() returns 0 and the secondary key collapses to 0 for the
-    // whole tied group → falls back to insertion order. Visually fine because
+    // whole tied group -> falls back to insertion order. Visually fine because
     // routes are symmetric in that configuration anyway.
     sortKey2: number;
   };

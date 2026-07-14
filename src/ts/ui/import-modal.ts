@@ -6,7 +6,7 @@ import { escapeHtml, nextFrame, q, pushModalLock, popModalLock, ensureStackedOve
 import { renderDropdown } from './toolbar';
 import type { CustomIcon, NetworkMap } from '../types';
 
-// ── Per-conflict resolution choices ──────────────────────────
+// -- Per-conflict resolution choices --------------------------
 
 type IconResolution =
   | { type: 'rename'; newName: string }
@@ -30,7 +30,7 @@ interface MapConflict {
   resolution: MapResolution;
 }
 
-// ── Public entry point ──────────────────────────────────────
+// -- Public entry point --------------------------------------
 
 /**
  * Open a hidden file picker; once the user chooses a JSON file, parse it,
@@ -91,7 +91,7 @@ function startImport(parsed: ParsedImport): void {
   const isBundle = parsed.kind === 'bundle';
 
   if (iconConflicts.length === 0 && mapConflicts.length === 0 && !isBundle) {
-    // Nothing to resolve and not a bundle — just apply
+    // Nothing to resolve and not a bundle - just apply
     applyImport(parsed, [], [], 'append');
     return;
   }
@@ -99,7 +99,7 @@ function startImport(parsed: ParsedImport): void {
   showConflictModal(parsed, iconConflicts, mapConflicts, isBundle);
 }
 
-// ── Conflict resolution UI ──────────────────────────────────
+// -- Conflict resolution UI ----------------------------------
 
 function showConflictModal(
   parsed: ParsedImport,
@@ -113,7 +113,7 @@ function showConflictModal(
   pushModalLock();
   const releaseTrap = trapFocus(overlay);
 
-  // Re-render helper — preserves all radio/text-input state by reading the
+  // Re-render helper - preserves all radio/text-input state by reading the
   // resolution objects (which we mutate in place as the user toggles things)
   let mode: 'append' | 'replace-all' = 'append';
 
@@ -192,7 +192,7 @@ function showConflictModal(
       }
 
       const applied = applyImport(parsed, iconConflicts, mapConflicts, mode);
-      // Keep the modal open if the user cancelled the destructive confirm —
+      // Keep the modal open if the user cancelled the destructive confirm -
       // they may want to switch back to "Append" or tweak something else
       // rather than starting the whole import over.
       if (applied) close();
@@ -240,7 +240,7 @@ function bindConflictHandlers<R extends { type: string }>(
   });
 }
 
-// ── HTML rendering ───────────────────────────────────────────
+// -- HTML rendering -------------------------------------------
 
 function render(
   parsed: ParsedImport,
@@ -258,11 +258,11 @@ function render(
       <div class="import-section-title">Mode</div>
       <label class="import-radio-row">
         <input type="radio" name="bundle-mode" value="append" ${mode === 'append' ? 'checked' : ''} />
-        <span><strong>Append</strong> — add the imported maps and icons alongside your existing ones.</span>
+        <span><strong>Append</strong> - add the imported maps and icons alongside your existing ones.</span>
       </label>
       <label class="import-radio-row danger-row">
         <input type="radio" name="bundle-mode" value="replace-all" ${mode === 'replace-all' ? 'checked' : ''} />
-        <span><strong>Replace everything</strong> — wipe all current maps and custom icons. <em>This cannot be undone.</em></span>
+        <span><strong>Replace everything</strong> - wipe all current maps and custom icons. <em>This cannot be undone.</em></span>
       </label>
     </div>
   ` : '';
@@ -370,11 +370,11 @@ function renderMapConflict(conflict: MapConflict, idx: number): string {
   `;
 }
 
-// ── Apply ────────────────────────────────────────────────────
+// -- Apply ----------------------------------------------------
 
 /**
  * Apply the import to the state. Returns `true` if state was updated, or
- * `false` if the user backed out of a destructive confirmation — in that case
+ * `false` if the user backed out of a destructive confirmation - in that case
  * the conflict modal stays open so they can pick a different mode.
  */
 function applyImport(
@@ -385,7 +385,7 @@ function applyImport(
 ): boolean {
   const state = getState();
 
-  // Bundle "replace everything" — wipe and load
+  // Bundle "replace everything" - wipe and load
   if (mode === 'replace-all' && parsed.kind === 'bundle') {
     if (!confirm('Replace everything? Your current maps and custom icons will be permanently deleted.')) {
       return false;
@@ -399,7 +399,7 @@ function applyImport(
       return { ...icon, id: newId };
     });
     const newMaps = parsed.maps.map(map => translateMapIds(map, iconIdMap));
-    // Always activate the first imported map — predictable, ignores the
+    // Always activate the first imported map - predictable, ignores the
     // bundle's saved activeMapId hint (which mostly reflects whatever map
     // the exporter happened to have selected).
     const newActive = newMaps[0].id;
@@ -409,11 +409,11 @@ function applyImport(
     return true;
   }
 
-  // Append flow — translate IDs, apply per-conflict resolutions
+  // Append flow - translate IDs, apply per-conflict resolutions
   const iconIdMap = new Map<string, string>();
   const iconsToAdd: CustomIcon[] = [];
 
-  // Non-conflicting icons → add with new ID
+  // Non-conflicting icons -> add with new ID
   const conflictingIncomingIds = new Set(iconConflicts.map(c => c.incoming.id));
   for (const icon of parsed.customIcons) {
     if (conflictingIncomingIds.has(icon.id)) continue;
@@ -422,7 +422,7 @@ function applyImport(
     iconsToAdd.push({ ...icon, id: newId });
   }
 
-  // Conflicting icons → resolve per choice
+  // Conflicting icons -> resolve per choice
   for (const c of iconConflicts) {
     if (c.resolution.type === 'rename') {
       const newId = generateId();
@@ -431,15 +431,15 @@ function applyImport(
     } else if (c.resolution.type === 'use-existing') {
       iconIdMap.set(c.incoming.id, c.resolution.existingId);
     }
-    // 'skip' → no entry in iconIdMap → device.iconId becomes 'custom:<old>' which falls back to "icon not found"
+    // 'skip' -> no entry in iconIdMap -> device.iconId becomes 'custom:<old>' which falls back to "icon not found"
   }
 
   const conflictByIncomingId = new Map(mapConflicts.map(c => [c.incoming.id, c]));
   const mapsToAdd: NetworkMap[] = [];
-  const mapsToReplaceById = new Map<string, NetworkMap>(); // existingId → new map (replaces in place)
+  const mapsToReplaceById = new Map<string, NetworkMap>(); // existingId -> new map (replaces in place)
 
   // Walk parsed.maps in import order so we can pick the first surviving map
-  // for post-import activation. Imported map IDs are throwaway — for append
+  // for post-import activation. Imported map IDs are throwaway - for append
   // we mint fresh ones so they can't collide; for replace we keep the
   // existing map's ID (and its createdAt for posterity).
   let firstImportedMapId: string | undefined;
@@ -456,7 +456,7 @@ function applyImport(
       finalId = conflict.resolution.existingId;
       mapsToReplaceById.set(finalId, translateMapIds(map, iconIdMap));
     }
-    // 'skip' → no finalId; this map doesn't make it into state, move on
+    // 'skip' -> no finalId; this map doesn't make it into state, move on
     if (finalId && !firstImportedMapId) firstImportedMapId = finalId;
   }
 
@@ -491,9 +491,9 @@ function translateMapIds(map: NetworkMap, iconIdMap: Map<string, string>): Netwo
   };
 }
 
-// ── Helpers ──────────────────────────────────────────────────
+// -- Helpers --------------------------------------------------
 
-/** Generate a unique name by appending " (2)", " (3)", … if needed. */
+/** Generate a unique name by appending " (2)", " (3)", ... if needed. */
 function uniqueName(base: string, taken: string[]): string {
   const lower = new Set(taken.map(t => t.toLowerCase()));
   if (!lower.has(base.toLowerCase())) return base;

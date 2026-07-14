@@ -8,11 +8,11 @@ import type { CustomIcon } from '../types';
 
 export { MAX_SVG_LENGTH };
 export const IMAGE_MAX_BYTES = 256 * 1024;   // Reject sources larger than this outright
-export const IMAGE_MAX_DIMENSION = 128;       // Downscale to this max edge — 128px is plenty for a card/panel icon
+export const IMAGE_MAX_DIMENSION = 128;       // Downscale to this max edge - 128px is plenty for a card/panel icon
 const IMAGE_ENCODE_QUALITY = 0.9;             // JPEG/WebP-style quality when re-encoding
 
 export async function readFileAsIcon(file: File): Promise<CustomIcon> {
-  // Accept both MIME and extension fallbacks for every supported kind — some
+  // Accept both MIME and extension fallbacks for every supported kind - some
   // browsers / OS combos strip MIME on drag-drop or send vendor-specific
   // types (e.g. "image/x-png"), so the extension check is the friendlier net.
   const lowerName = file.name.toLowerCase();
@@ -32,9 +32,9 @@ export async function readFileAsIcon(file: File): Promise<CustomIcon> {
     throw new Error(`SVG is too large (${Math.round(file.size / 1024)} KB). Maximum is ${MAX_SVG_LENGTH / 1024} KB.`);
   }
 
-  // Strip the extension for the display name. Dotfiles ("foo.bar.svg" → "foo.bar"
-  // is fine; ".hidden" → "" needs the fallback) collapse to an empty string
-  // which the icon library doesn't render usefully — fall back to a generic.
+  // Strip the extension for the display name. Dotfiles ("foo.bar.svg" -> "foo.bar"
+  // is fine; ".hidden" -> "" needs the fallback) collapse to an empty string
+  // which the icon library doesn't render usefully - fall back to a generic.
   const name = file.name.replace(/\.[^.]+$/, '') || 'untitled';
   const id = generateId();
   const createdAt = new Date().toISOString();
@@ -47,7 +47,7 @@ export async function readFileAsIcon(file: File): Promise<CustomIcon> {
   }
 
   // Re-encode raster images at icon resolution. This keeps stored size
-  // bounded regardless of the source dimensions — a 4000×3000 PNG would
+  // bounded regardless of the source dimensions - a 4000x3000 PNG would
   // otherwise become a multi-megabyte data URL after base64 inflation and
   // chew through localStorage.
   const dataUrl = await downscaleImage(file);

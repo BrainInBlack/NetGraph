@@ -42,7 +42,7 @@
   stroke-dasharray: 4 3;
 }
 
-// Ghost preview during connect mode — straight line from anchor to cursor
+// Ghost preview during connect mode - straight line from anchor to cursor
 // (or to a hovered target's center). Pure visual, no interaction.
 .conn-ghost {
   fill: none;
@@ -54,7 +54,7 @@
   transition: stroke 0.1s;
 }
 
-// Hovering a device that's already connected to the anchor — paint the
+// Hovering a device that's already connected to the anchor - paint the
 // ghost in the warning color so the user sees the commit will be a no-op.
 .conn-ghost.conn-ghost-duplicate {
   stroke: rgba(225, 170, 90, 0.55);
@@ -65,7 +65,7 @@
   stroke: rgb(110, 165, 220);
 }
 
-// Hover must not override the warning — users need to see it to act on it.
+// Hover must not override the warning - users need to see it to act on it.
 .conn-group:hover .conn-line.conn-collision,
 .conn-group.active .conn-line.conn-collision {
   stroke: $status-warning;
@@ -88,7 +88,7 @@
   opacity: 1;
 }
 
-// ── Hover action buttons (Edit / Delete) ─────────────────────
+// -- Hover action buttons (Edit / Delete) ---------------------
 //
 // Live inside an SVG <foreignObject> centered above the label anchor. Only
 // visible in connect mode AND while the connection is hovered. Pointer-events
@@ -101,7 +101,7 @@
   pointer-events: none;
   transition: opacity 0.15s;
 
-  // Default-hidden — the only way to see them is to be in connect mode AND
+  // Default-hidden - the only way to see them is to be in connect mode AND
   // hovering. Outside connect mode the buttons should never appear.
   display: none;
 }

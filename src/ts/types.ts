@@ -1,4 +1,4 @@
-// ── Device types ──────────────────────────────────────────────
+// -- Device types ----------------------------------------------
 
 export type DeviceType =
   | 'modem'
@@ -22,7 +22,7 @@ export interface Device {
   /** Canvas position */
   x: number;
   y: number;
-  /** For VMs/containers — id of the host device */
+  /** For VMs/containers - id of the host device */
   hostId?: string;
   /**
    * Optional icon override.
@@ -37,7 +37,7 @@ export interface Device {
   width?: number;
 }
 
-// ── Custom icons ──────────────────────────────────────────────
+// -- Custom icons ----------------------------------------------
 
 export interface CustomIcon {
   id: string;
@@ -48,7 +48,7 @@ export interface CustomIcon {
   createdAt: string;
 }
 
-// ── Connections ───────────────────────────────────────────────
+// -- Connections -----------------------------------------------
 
 export type LinkType = 'wired' | 'wireless';
 
@@ -57,7 +57,7 @@ export type LinkSide = 'top' | 'bottom' | 'left' | 'right';
 /**
  * Named ports for connection endpoints. Anything outside this set must be
  * numeric (stored as a number). Free-form strings are intentionally not
- * supported — keeps labels short and the visual language consistent.
+ * supported - keeps labels short and the visual language consistent.
  */
 export const NAMED_PORTS = ['WAN', 'LAN', 'LINK', 'SFP', 'POE', 'MGMT', 'TRUNK'] as const;
 export type NamedPort = typeof NAMED_PORTS[number];
@@ -81,7 +81,7 @@ export interface Link {
   targetPort?: LinkPort;
 }
 
-// ── Network map ───────────────────────────────────────────────
+// -- Network map -----------------------------------------------
 
 export interface NetworkMap {
   id: string;
@@ -92,7 +92,7 @@ export interface NetworkMap {
   updatedAt: string;
 }
 
-// ── App state ─────────────────────────────────────────────────
+// -- App state -------------------------------------------------
 
 export interface AppState {
   activeMapId: string;

@@ -1,20 +1,20 @@
 @use '../variables' as *;
 
-// ── Connect mode ─────────────────────────────────────────────
+// -- Connect mode ---------------------------------------------
 //
 // Three sub-modes (Hub / Single / Advanced) selected from the top-center
 // indicator pill. Mechanics shared across all:
-//   - Tap a device to anchor it → `.device.connect-anchor` plus four
+//   - Tap a device to anchor it -> `.device.connect-anchor` plus four
 //     `.connect-handle` children.
-//   - Tap a handle to pre-select a source side → `.connect-handle.picked`.
-//   - Tap another device → connection committed.
+//   - Tap a handle to pre-select a source side -> `.connect-handle.picked`.
+//   - Tap another device -> connection committed.
 //
 // What happens AFTER a commit varies by sub-mode (see connect-mode.ts):
-//   Hub      — anchor stays, ready for the next target (one-to-many)
-//   Single   — anchor resets, next tap starts a fresh connection
-//   Advanced — anchor resets and the connection editor opens
+//   Hub      - anchor stays, ready for the next target (one-to-many)
+//   Single   - anchor resets, next tap starts a fresh connection
+//   Advanced - anchor resets and the connection editor opens
 
-// ── Connect-mode global state ────────────────────────────────
+// -- Connect-mode global state --------------------------------
 //
 // Drawn on `#app` so descendants can branch off it without affecting the
 // default behaviors of the same selectors outside connect mode.
@@ -22,27 +22,27 @@
 #app.connect-mode-on {
   #canvas {
     cursor: crosshair;
-    // White inner glow — unmistakable signal that you're in a different mode.
+    // White inner glow - unmistakable signal that you're in a different mode.
     // Inner stroke + soft inner wash; renders fine inside overflow:hidden.
     box-shadow:
       inset 0 0 0 2px rgba(255, 255, 255, 0.55),
       inset 0 0 80px rgba(255, 255, 255, 0.10);
   }
 
-  // Drop the hover lift — every device is a click target here, and the lift
+  // Drop the hover lift - every device is a click target here, and the lift
   // motion competes with the explicit mode signaling.
   .device:hover,
   .device.selected {
     transform: translateX(-50%);
   }
 
-  // And drop the non-anchor softening — border saturation is enough.
+  // And drop the non-anchor softening - border saturation is enough.
   .device:not(.connect-anchor) {
     opacity: 1;
   }
 }
 
-// ── Anchor + handles ─────────────────────────────────────────
+// -- Anchor + handles -----------------------------------------
 
 .device.connect-anchor {
   outline: 2px solid rgb(100, 160, 220);
@@ -67,7 +67,7 @@
       background: rgb(140, 200, 240);
     }
 
-    // The "picked" handle — bigger, brighter, with a soft halo so the user
+    // The "picked" handle - bigger, brighter, with a soft halo so the user
     // sees clearly which side will be used as the source.
     &.picked {
       background: rgb(160, 220, 250);
@@ -82,7 +82,7 @@
   }
 }
 
-// ── Indicator pill — top center ──────────────────────────────
+// -- Indicator pill - top center ------------------------------
 //
 // Hidden by default; shown when `.connect-mode-on` is set on `#app`. Hosts
 // the live status line and the sub-mode segmented control.

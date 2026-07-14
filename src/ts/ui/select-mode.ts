@@ -1,12 +1,12 @@
 /**
- * Select mode — multi-selection on the canvas with copy / paste / duplicate.
+ * Select mode - multi-selection on the canvas with copy / paste / duplicate.
  *
- *   off ──(toggle)── idle ──(canvas drag)── lassoing ──(release)── idle
- *                            ──(device tap)── toggles selection
- *                            ──(canvas right-click)── Paste / Select All / Clear
- *                            ──(selected device right-click)── Copy / Duplicate / Delete
+ *   off --(toggle)-- idle --(canvas drag)-- lassoing --(release)-- idle
+ *                            --(device tap)-- toggles selection
+ *                            --(canvas right-click)-- Paste / Select All / Clear
+ *                            --(selected device right-click)-- Copy / Duplicate / Delete
  *
- * Mutually exclusive with connect mode — turning one on turns the other off.
+ * Mutually exclusive with connect mode - turning one on turns the other off.
  *
  * Multi-selection state lives in state.ts (`selectedDeviceIds`); this module
  * owns the mode flag, the lasso gesture, the in-memory clipboard, and the
@@ -40,7 +40,7 @@ let clipboard: Clipboard | null = null;
 /**
  * Per-device hit-test data captured once at lasso start. Device positions
  * (and therefore their viewport-space bounding rects) don't change during a
- * lasso — pan is suppressed in select mode, and the user is on empty canvas
+ * lasso - pan is suppressed in select mode, and the user is on empty canvas
  * so no device is being dragged either. Caching the centers means each
  * pointermove iterates a flat array of plain objects instead of running
  * `querySelectorAll('.device')` + `getBoundingClientRect()` per device per
@@ -53,13 +53,13 @@ let lassoHitCache: DeviceHit[] | null = null;
 let canvasEl: HTMLElement | null = null;
 let connectionsSvg: SVGSVGElement | null = null;
 
-// Init guard — a second call would double-bind every listener and break
+// Init guard - a second call would double-bind every listener and break
 // state-machine assumptions (e.g. two pointerdown handlers racing to
 // `setPointerCapture`). main.ts calls this once, but the guard keeps it
 // honest if the boot path ever changes.
 let initialized = false;
 
-// ── Init ─────────────────────────────────────────────────────
+// -- Init -----------------------------------------------------
 
 export function initSelectMode(): void {
   if (initialized) return;
@@ -118,7 +118,7 @@ export function initSelectMode(): void {
   });
 }
 
-// ── External hooks ───────────────────────────────────────────
+// -- External hooks -------------------------------------------
 
 export function isSelectModeOn(): boolean {
   return mode !== 'off';
@@ -130,7 +130,7 @@ export function hasClipboard(): boolean {
 
 /**
  * Hook called by main.ts's onDeviceClick. In select mode a click toggles the
- * device in/out of the multi-selection — returns true so the single-select
+ * device in/out of the multi-selection - returns true so the single-select
  * path skips. Outside select mode this is a no-op (returns false).
  */
 export function tryHandleSelectDeviceClick(deviceId: string): boolean {
@@ -160,7 +160,7 @@ export function exitSelectMode(): void {
   document.getElementById('select-indicator')?.classList.add('hidden');
 }
 
-// ── Mode toggle + mutual exclusion ───────────────────────────
+// -- Mode toggle + mutual exclusion ---------------------------
 
 function toggleMode(): void {
   if (mode === 'off') enterSelectMode();
@@ -168,9 +168,9 @@ function toggleMode(): void {
 }
 
 function enterSelectMode(): void {
-  // Mutually exclusive with connect mode — only one canvas-level mode at a time.
+  // Mutually exclusive with connect mode - only one canvas-level mode at a time.
   if (isConnectModeOn()) exitConnectMode();
-  // Entering select mode steals focus from the detail panel — the single-
+  // Entering select mode steals focus from the detail panel - the single-
   // select / panel interaction belongs to the default mode.
   setSelectedDeviceId(null);
   closePanel();
@@ -187,20 +187,20 @@ function enterSelectMode(): void {
   fitToContent();
 }
 
-// ── Indicator ────────────────────────────────────────────────
+// -- Indicator ------------------------------------------------
 
 function updateIndicator(): void {
   const el = document.getElementById('select-indicator-status');
   if (!el || mode === 'off') return;
   const n = getSelectedDeviceIds().size;
   if (n === 0) {
-    el.textContent = 'Select mode — drag to lasso, tap a device to toggle';
+    el.textContent = 'Select mode - drag to lasso, tap a device to toggle';
   } else {
-    el.textContent = `${n} selected — right-click for actions`;
+    el.textContent = `${n} selected - right-click for actions`;
   }
 }
 
-// ── Lasso ────────────────────────────────────────────────────
+// -- Lasso ----------------------------------------------------
 
 function onCanvasPointerDown(e: PointerEvent): void {
   if (mode !== 'idle') return;
@@ -209,7 +209,7 @@ function onCanvasPointerDown(e: PointerEvent): void {
   if (target.closest?.('.device') || target.closest?.('.conn-group') || target.closest?.('.ctx-menu')) {
     return;
   }
-  // Block the pan handler in zoom.ts — see isSelectModeOn() check there.
+  // Block the pan handler in zoom.ts - see isSelectModeOn() check there.
   e.preventDefault();
   lasso = { startClientX: e.clientX, startClientY: e.clientY, pointerId: e.pointerId };
   canvasEl?.setPointerCapture(e.pointerId);
@@ -223,7 +223,7 @@ function onCanvasPointerMove(e: PointerEvent): void {
   if (!moved && mode === 'idle') return;
   if (mode === 'idle') {
     mode = 'lassoing';
-    // One-shot device snapshot — see `lassoHitCache` doc above. Building it
+    // One-shot device snapshot - see `lassoHitCache` doc above. Building it
     // at promotion (not at pointerdown) avoids the cost when the gesture
     // turns out to be a click rather than a drag.
     buildLassoHitCache();
@@ -231,7 +231,7 @@ function onCanvasPointerMove(e: PointerEvent): void {
   drawLasso(lasso.startClientX, lasso.startClientY, e.clientX, e.clientY);
   // Live-update the selection so devices light up as the rect sweeps over
   // them, instead of only revealing the result on release. setSelectedDeviceIds
-  // funnels through scheduleRender, which is rAF-coalesced — at most one
+  // funnels through scheduleRender, which is rAF-coalesced - at most one
   // re-render per frame even if pointermove fires faster.
   applyLassoSelection(lasso.startClientX, lasso.startClientY, e.clientX, e.clientY);
 }
@@ -252,12 +252,12 @@ function onCanvasPointerUp(e: PointerEvent): void {
   const wasLassoing = mode === 'lassoing';
   cancelLasso();
   if (!wasLassoing) {
-    // Plain canvas click in select mode → clear selection. Saves the user a
+    // Plain canvas click in select mode -> clear selection. Saves the user a
     // trip to the context menu for "I'm done; deselect everything".
     if (getSelectedDeviceIds().size > 0) setSelectedDeviceIds(new Set());
     return;
   }
-  // Selection is already current — the last pointermove applied it. No
+  // Selection is already current - the last pointermove applied it. No
   // finalize pass needed; pointerup is just where we tear down the rect.
 }
 
@@ -268,7 +268,7 @@ function drawLasso(x1: number, y1: number, x2: number, y2: number): void {
     lassoRect.classList.add('select-lasso');
     connectionsSvg.appendChild(lassoRect);
   }
-  // SVG sits inside #canvas-transform → coords are canvas-transform-space.
+  // SVG sits inside #canvas-transform -> coords are canvas-transform-space.
   const a = screenToCanvas(x1, y1);
   const b = screenToCanvas(x2, y2);
   lassoRect.setAttribute('x', String(Math.min(a.x, b.x)));
@@ -291,11 +291,11 @@ function cancelLasso(): void {
 /**
  * Recompute the multi-selection from the current lasso rect. Called from
  * every `pointermove` during a lasso drag, so devices light up live as the
- * rect sweeps over them. The set is computed each call (not accumulated) —
+ * rect sweeps over them. The set is computed each call (not accumulated) -
  * shrinking the rect drops devices back out, matching graphic-editor norms.
  *
  * Reads from `lassoHitCache` (snapshotted at lasso start) so there are zero
- * DOM reads per frame — just iteration over a flat array of precomputed
+ * DOM reads per frame - just iteration over a flat array of precomputed
  * device centers in viewport coords.
  */
 function applyLassoSelection(x1: number, y1: number, x2: number, y2: number): void {
@@ -309,7 +309,7 @@ function applyLassoSelection(x1: number, y1: number, x2: number, y2: number): vo
       next.add(hit.id);
     }
   }
-  // Skip the set call when the membership didn't change — avoids triggering
+  // Skip the set call when the membership didn't change - avoids triggering
   // a render every frame just to land on the same selection. (Pointermove
   // can fire many times along the same row of pixels.)
   const cur = getSelectedDeviceIds();
@@ -323,7 +323,7 @@ function applyLassoSelection(x1: number, y1: number, x2: number, y2: number): vo
   setSelectedDeviceIds(next);
 }
 
-// ── Clipboard actions ────────────────────────────────────────
+// -- Clipboard actions ----------------------------------------
 
 export function copySelection(): boolean {
   const ids = getSelectedDeviceIds();
@@ -356,10 +356,10 @@ export function pasteAtScreen(clientX: number, clientY: number): void {
   if (!clipboard) return;
   const s = getState();
   const map = getActiveMap(s);
-  // Cursor → canvas coords; centroid lands at the cursor. Note: clientX/Y is
+  // Cursor -> canvas coords; centroid lands at the cursor. Note: clientX/Y is
   // captured at right-click time and replayed when the menu item fires. If
   // the user pans or zooms between right-clicking and clicking Paste, the
-  // anchor will be off by the delta — but the context menu closes on outside-
+  // anchor will be off by the delta - but the context menu closes on outside-
   // click, so in practice the user can't pan/zoom while it's open.
   const anchor = screenToCanvas(clientX, clientY);
   const out = pasteClipboard(clipboard, anchor.x, anchor.y, generateId, snapToGrid);
@@ -376,7 +376,7 @@ export function deleteSelection(): void {
   const s = getState();
   const map = getActiveMap(s);
   // Remove devices in selection, and any link touching one of them (including
-  // links that span into the non-selected set — those would otherwise dangle).
+  // links that span into the non-selected set - those would otherwise dangle).
   map.devices = map.devices.filter(d => !ids.has(d.id));
   map.links = map.links.filter(l => !ids.has(l.sourceId) && !ids.has(l.targetId));
   // Also nuke hostId references on surviving devices that pointed into the
@@ -399,7 +399,7 @@ function clearSelection(): void {
   setSelectedDeviceIds(new Set());
 }
 
-// ── Group drag ───────────────────────────────────────────────
+// -- Group drag -----------------------------------------------
 //
 // The renderer's drag handler asks this module whether a drag is a group
 // drag (the dragged device is in the multi-selection); if so, it captures
@@ -408,9 +408,9 @@ function clearSelection(): void {
 
 /** Snapshot of the group's origin positions at pointerdown. */
 export interface GroupDragSnapshot {
-  /** Map of deviceId → origin x. */
+  /** Map of deviceId -> origin x. */
   origX: Map<string, number>;
-  /** Map of deviceId → origin y. */
+  /** Map of deviceId -> origin y. */
   origY: Map<string, number>;
 }
 
@@ -452,7 +452,7 @@ export function applyGroupDrag(snapshot: GroupDragSnapshot, dx: number, dy: numb
 /**
  * Persist the post-drag positions of every device in the group. The state
  * has already been mutated in place by `applyGroupDrag` on each pointermove
- * — this call exists solely to bump `map.updatedAt` and trip the localStorage
+ * - this call exists solely to bump `map.updatedAt` and trip the localStorage
  * write through `setState`.
  */
 export function endGroupDrag(): void {

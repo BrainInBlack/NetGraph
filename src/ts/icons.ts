@@ -81,7 +81,7 @@ export const ICON_LIBRARY: IconCatalogEntry[] = [
 const LIBRARY_BY_ID = new Map(ICON_LIBRARY.map(i => [i.id, i]));
 
 /**
- * Friendly display name for an icon — used in modals where we want to tell
+ * Friendly display name for an icon - used in modals where we want to tell
  * the user which icon is selected. Falls back to the raw ID if unknown.
  */
 export function iconDisplayName(iconId: string | undefined, customIcons: CustomIcon[] | undefined): string | null {
@@ -96,9 +96,9 @@ export function iconDisplayName(iconId: string | undefined, customIcons: CustomI
 
 /**
  * Resolve an iconId to its renderable HTML.
- * - `lucide:<name>` → the static SVG markup (uses currentColor)
- * - `custom:<id>`   → SVG markup or `<img>` tag, depending on the custom icon's kind
- * - unset / unknown → the "icon not found" SVG
+ * - `lucide:<name>` -> the static SVG markup (uses currentColor)
+ * - `custom:<id>`   -> SVG markup or `<img>` tag, depending on the custom icon's kind
+ * - unset / unknown -> the "icon not found" SVG
  */
 export function renderIconHtml(iconId: string | undefined, customIcons: CustomIcon[] | undefined): string {
   if (!iconId) return ICON_NOT_FOUND_SVG;

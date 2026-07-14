@@ -14,7 +14,7 @@
 
 /// Shared backdrop for dynamically-created overlays (icon-picker,
 /// icon-manager, import-modal). They each get their own `<div>` appended to
-/// <body> via `ensureStackedOverlay()` — the actual z-index is set inline
+/// <body> via `ensureStackedOverlay()` - the actual z-index is set inline
 /// from a TS-side constant so the stacking order stays in one place.
 .stacked-overlay {
   position: fixed;
@@ -117,7 +117,7 @@
   }
 }
 
-// ── Icon picker ──────────────────────────────────────────────
+// -- Icon picker ----------------------------------------------
 
 .icon-picker-trigger {
   display: flex;
@@ -284,7 +284,7 @@
   font-style: italic;
 }
 
-// ── Import / conflict resolution ─────────────────────────────
+// -- Import / conflict resolution -----------------------------
 
 .import-modal {
   width: 580px;
@@ -403,7 +403,7 @@
   gap: 2px;
 }
 
-// ── Icon manager ─────────────────────────────────────────────
+// -- Icon manager ---------------------------------------------
 
 // The manager reuses the picker's tile grid + upload box; only the modal
 // width is unique to it.
@@ -422,7 +422,7 @@
   &--ip-port { grid-template-columns: 1fr 90px; }
 }
 
-// ── Card-width segmented control ─────────────────────────────
+// -- Card-width segmented control -----------------------------
 
 .width-options {
   display: grid;
@@ -505,7 +505,7 @@
   }
 }
 
-// ── Connection editor ───────────────────────────────────────
+// -- Connection editor ---------------------------------------
 
 .conn-edit-summary {
   color: $text-muted;
@@ -578,7 +578,7 @@
   }
 }
 
-// ── Connection-type segmented control ────────────────────────
+// -- Connection-type segmented control ------------------------
 
 .type-options {
   display: grid;
@@ -626,7 +626,7 @@
 
 // Port input + named quick-fill buttons
 .port-input {
-  // Inherits sizing from `.form-row input` — only customizations here.
+  // Inherits sizing from `.form-row input` - only customizations here.
   font-family: $font-stack;
 }
 
@@ -656,7 +656,7 @@
   }
 }
 
-// Side picker — 3x3 grid (T, L/Auto/R, B) with corners blank
+// Side picker - 3x3 grid (T, L/Auto/R, B) with corners blank
 .side-picker {
   display: grid;
   grid-template-columns: 1fr 1.4fr 1fr;

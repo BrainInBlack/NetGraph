@@ -5,8 +5,8 @@ import { readFileAsIcon, IMAGE_MAX_BYTES, IMAGE_MAX_DIMENSION, MAX_SVG_LENGTH } 
 import type { CustomIcon } from '../types';
 
 /**
- * Standalone "Manage Icons" view. Mirrors the icon picker's Custom tab —
- * tile grid of every custom icon plus the same upload affordance — so the
+ * Standalone "Manage Icons" view. Mirrors the icon picker's Custom tab -
+ * tile grid of every custom icon plus the same upload affordance - so the
  * user can manage their library without going through a device's icon
  * picker. The per-tile delete button and the upload behavior are shared
  * with the picker (via icon-upload.ts).
@@ -16,7 +16,7 @@ let releaseTrap: (() => void) | null = null;
 
 export function openIconManager(): void {
   const overlay = ensureOverlay();
-  // Bind the backdrop-click handler exactly once — render() runs after every
+  // Bind the backdrop-click handler exactly once - render() runs after every
   // delete/upload and would otherwise stack a fresh listener each time.
   if (!backdropBound) {
     bindOverlayDismiss(overlay, () => close(overlay));
@@ -47,7 +47,7 @@ function render(overlay: HTMLElement): void {
     ? `<div class="icon-picker-grid">
          ${sortedIcons.map(c => renderTile(c, usage.get(c.id) ?? 0, icons)).join('')}
        </div>`
-    : '<div class="icon-picker-empty">No custom icons yet — upload one below.</div>';
+    : '<div class="icon-picker-empty">No custom icons yet - upload one below.</div>';
 
   overlay.innerHTML = `
     <div class="modal icon-manager" role="dialog" aria-modal="true" aria-label="Manage Icons">
@@ -98,7 +98,7 @@ function renderTile(icon: CustomIcon, count: number, customIcons: CustomIcon[]):
   const preview = renderIconHtml(`custom:${icon.id}`, customIcons);
   const kindLabel = icon.kind === 'svg' ? 'SVG' : 'Image';
   const usageLabel = count === 0 ? 'unused' : `${count} device${count === 1 ? '' : 's'}`;
-  const title = `${icon.name} — ${kindLabel} · ${usageLabel}`;
+  const title = `${icon.name} - ${kindLabel} · ${usageLabel}`;
   return `
     <div class="icon-tile" title="${escapeHtml(title)}">
       ${preview}
@@ -148,7 +148,7 @@ export function confirmDeleteCustomIcon(id: string): boolean {
   if (!icon) return false;
   const count = computeUsageCounts().get(id) ?? 0;
   const usageMsg = count
-    ? `It's used by ${count} device${count === 1 ? '' : 's'} — they'll fall back to the default icon for their type.`
+    ? `It's used by ${count} device${count === 1 ? '' : 's'} - they'll fall back to the default icon for their type.`
     : 'No devices currently use this icon.';
   if (!confirm(`Delete "${icon.name}"?\n\n${usageMsg}`)) return false;
   deleteIcon(id);

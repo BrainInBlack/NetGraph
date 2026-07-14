@@ -1,7 +1,7 @@
 import { escapeHtml, q, nextFrame } from '../../util';
 import { showModal, dismissModal } from './shared';
 
-// ── Export Bundle ────────────────────────────────────────────
+// -- Export Bundle --------------------------------------------
 
 export function showExportBundleModal(): void {
   // Pre-fill with a dated filename so multiple backups don't overwrite each
@@ -30,7 +30,7 @@ export function showExportBundleModal(): void {
   const submit = () => {
     const raw = input.value.trim();
     if (!raw) return;
-    // Dispatch with the chosen filename — toolbar.ts builds + downloads
+    // Dispatch with the chosen filename - toolbar.ts builds + downloads
     document.dispatchEvent(new CustomEvent('netgraph:export-bundle-confirmed', { detail: { filename: raw } }));
     dismissModal();
   };

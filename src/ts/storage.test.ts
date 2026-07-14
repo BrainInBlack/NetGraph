@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { loadState, saveState, getActiveMap, createEmptyMap, StorageQuotaError } from './storage';
 import type { AppState, NetworkMap } from './types';
 
-// Must match STORAGE_KEY in storage.ts — needed to plant raw/corrupt data
+// Must match STORAGE_KEY in storage.ts - needed to plant raw/corrupt data
 // that can't go through saveState.
 const KEY = 'netgraph-state';
 
@@ -28,7 +28,7 @@ function map(over: Partial<NetworkMap> = {}): NetworkMap {
 beforeEach(() => { globalThis.localStorage = makeStorage(); });
 afterEach(() => vi.restoreAllMocks());
 
-// ── createEmptyMap ──────────────────────────────────────────────
+// -- createEmptyMap ----------------------------------------------
 
 describe('createEmptyMap', () => {
   it('returns a blank map with the given name and a generated id', () => {
@@ -45,7 +45,7 @@ describe('createEmptyMap', () => {
   });
 });
 
-// ── getActiveMap ────────────────────────────────────────────────
+// -- getActiveMap ------------------------------------------------
 
 describe('getActiveMap', () => {
   it('returns the map matching activeMapId', () => {
@@ -59,7 +59,7 @@ describe('getActiveMap', () => {
   });
 });
 
-// ── loadState ───────────────────────────────────────────────────
+// -- loadState ---------------------------------------------------
 
 describe('loadState', () => {
   it('returns a seeded default state when nothing is stored', () => {
@@ -104,7 +104,7 @@ describe('loadState', () => {
   });
 });
 
-// ── saveState ───────────────────────────────────────────────────
+// -- saveState ---------------------------------------------------
 
 describe('saveState', () => {
   it('round-trips through loadState', () => {

@@ -7,14 +7,14 @@ import { renderIconHtml } from '../../icons';
 import { snapToGrid, escapeHtml, createLongPress } from '../../util';
 // Deliberate layering exception: the renderer is otherwise a leaf consumer
 // of state, but the device drag handler needs to know whether a drag should
-// move just this device or the whole multi-selection — and that knowledge
+// move just this device or the whole multi-selection - and that knowledge
 // lives in select-mode. The alternative (renderer fires drag events, select-
 // mode listens and mutates) would force the renderer to either skip its own
 // per-device drag math or duplicate it across two paths. Keeping the import
 // is the simpler trade.
 import { beginGroupDrag, applyGroupDrag, endGroupDrag, type GroupDragSnapshot } from '../../ui/select-mode';
 
-// ── Device cards ─────────────────────────────────────────────
+// -- Device cards ---------------------------------------------
 
 export function renderDevices(
   devices: Device[],
@@ -26,7 +26,7 @@ export function renderDevices(
 
   // Index existing device cards by id in a single pass, then reuse the map for
   // both the removal sweep and the per-device lookup below. Avoids an O(n)
-  // querySelector per device (which made the whole render O(n²)) — mirrors the
+  // querySelector per device (which made the whole render O(n²)) - mirrors the
   // same index pattern in renderConnections.
   const existing = new Map<string, HTMLElement>();
   layer.querySelectorAll<HTMLElement>('.device').forEach(el => {
@@ -58,7 +58,7 @@ export function renderDevices(
     }
 
     // The drag handler writes device.x/y on every pointermove, so the model is
-    // always authoritative — apply unconditionally.
+    // always authoritative - apply unconditionally.
     el.style.left = `${device.x}px`;
     el.style.top = `${device.y}px`;
     el.style.width = device.width ? `${device.width}px` : '';
@@ -72,7 +72,7 @@ export function renderDevices(
 /** Compact serialization of every field that affects the rendered card markup. */
 function deviceContentHash(device: Device, map: NetworkMap): string {
   const host = device.hostId ? map.devices.find(d => d.id === device.hostId) : undefined;
-  // Tuple — order matters but is stable
+  // Tuple - order matters but is stable
   return JSON.stringify([
     device.type,
     device.name,
@@ -141,7 +141,7 @@ function updateDeviceElement(el: HTMLElement, device: Device, map: NetworkMap): 
     ${footer}`;
 }
 
-// ── Drag handling ────────────────────────────────────────────
+// -- Drag handling --------------------------------------------
 
 // Touch pointers wobble more than a mouse, so we need a slightly looser
 // threshold or quick taps register as accidental drags.
@@ -188,7 +188,7 @@ function attachDeviceDragHandlers(el: HTMLElement, deviceId: string): void {
     // Probe select-mode for a group-drag snapshot; null = single drag
     groupDrag = beginGroupDrag(deviceId);
 
-    // On touch, long-press substitutes for right-click → device context menu
+    // On touch, long-press substitutes for right-click -> device context menu
     longPress.start(e, () => {
       pointerDown = false;
       onDeviceContextMenu(deviceId, e.clientX, e.clientY);

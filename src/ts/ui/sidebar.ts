@@ -14,8 +14,8 @@ export function initSidebar(): void {
 
 /**
  * Hash of every field the panel actually displays. Excludes position so a
- * device drag — which fires `render()` (and therefore `openPanel`) at 60+/s
- * via the after-render hook — doesn't trigger a full innerHTML rewrite when
+ * device drag - which fires `render()` (and therefore `openPanel`) at 60+/s
+ * via the after-render hook - doesn't trigger a full innerHTML rewrite when
  * nothing visible changed.
  */
 function panelContentHash(device: Device, map: NetworkMap): string {
@@ -25,7 +25,7 @@ function panelContentHash(device: Device, map: NetworkMap): string {
     const host = device.hostId ? map.devices.find(d => d.id === device.hostId) : null;
     connSnapshot = host ? [host.type, host.name] : null;
   } else {
-    // Build a single id→device lookup so we avoid an O(devices) find() per link
+    // Build a single id->device lookup so we avoid an O(devices) find() per link
     const byId = new Map(map.devices.map(d => [d.id, d]));
     connSnapshot = map.links
       .filter(l => l.sourceId === device.id || l.targetId === device.id)
@@ -33,7 +33,7 @@ function panelContentHash(device: Device, map: NetworkMap): string {
         const otherId = l.sourceId === device.id ? l.targetId : l.sourceId;
         const other = byId.get(otherId);
         // This device's port is what the list actually surfaces (falling back to
-        // label), so it must be in the hash — otherwise editing a port leaves the
+        // label), so it must be in the hash - otherwise editing a port leaves the
         // open panel stale because the hash short-circuits the rewrite.
         const myPort = l.sourceId === device.id ? l.sourcePort : l.targetPort;
         return [l.id, l.type, l.label ?? '', myPort ?? '', other?.name ?? '', other?.type ?? ''];
@@ -60,7 +60,7 @@ export function openPanel(device: Device, map: NetworkMap): void {
   const panel = document.getElementById('detail-panel')!;
   // Short-circuit when the panel is already showing this exact content.
   // Crucially: this is what stops 60fps churn when the user drags a selected
-  // device — position changes but the panel data doesn't.
+  // device - position changes but the panel data doesn't.
   const hash = panelContentHash(device, map);
   if (lastPanelHash === hash && !panel.classList.contains('hidden')) return;
   lastPanelHash = hash;
@@ -93,7 +93,7 @@ export function openPanel(device: Device, map: NetworkMap): void {
     ? device.tags.map(t => `<span class="panel-tag">#${escapeHtml(t)}</span>`).join('')
     : '<span class="empty-hint">No tags</span>';
 
-  // Connections / Host — VMs only show their host; everything else shows network links
+  // Connections / Host - VMs only show their host; everything else shows network links
   const isVm = device.type === 'vm';
   const host = isVm && device.hostId ? map.devices.find(d => d.id === device.hostId) : null;
 
@@ -147,7 +147,7 @@ export function openPanel(device: Device, map: NetworkMap): void {
     document.dispatchEvent(new CustomEvent('netgraph:delete-device', { detail: { deviceId: device.id } }));
   });
 
-  // Click connection item → select that device
+  // Click connection item -> select that device
   bodyEl.querySelectorAll('.conn-item').forEach(item => {
     item.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).classList.contains('conn-item-delete')) return;
@@ -157,7 +157,7 @@ export function openPanel(device: Device, map: NetworkMap): void {
     });
   });
 
-  // Delete connection → dispatch shared event (handled in modals.ts)
+  // Delete connection -> dispatch shared event (handled in modals.ts)
   bodyEl.querySelectorAll('.conn-item-delete').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -172,7 +172,7 @@ export function openPanel(device: Device, map: NetworkMap): void {
 export function closePanel(): void {
   document.getElementById('detail-panel')!.classList.add('hidden');
   // Force a full re-render the next time the panel opens, even if it's the
-  // same device — otherwise the short-circuit in openPanel would no-op and
+  // same device - otherwise the short-circuit in openPanel would no-op and
   // the panel would stay hidden.
   lastPanelHash = null;
 }

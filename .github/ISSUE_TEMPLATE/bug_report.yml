@@ -6,12 +6,12 @@ body:
     attributes:
       value: |
         Thanks for taking the time to file a bug. Please don't report security
-        issues here — see the [security policy](../blob/main/.github/SECURITY.md)
+        issues here - see the [security policy](../blob/main/.github/SECURITY.md)
         for private reporting.
 
         NetGraph stores everything in your browser's `localStorage`. If the app
-        won't load at all, a corrupt saved state is a common cause — exporting a
-        bundle (map dropdown → Export) before you try anything destructive is a
+        won't load at all, a corrupt saved state is a common cause - exporting a
+        bundle (map dropdown -> Export) before you try anything destructive is a
         good idea.
   - type: textarea
     id: what-happened

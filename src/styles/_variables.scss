@@ -1,15 +1,15 @@
-// ── Backgrounds ───────────────────────────────────────────────
+// -- Backgrounds -----------------------------------------------
 $bg:           rgb(13, 13, 15);
 $bg-surface:   rgb(22, 22, 24);
 $bg-raised:    rgb(34, 34, 36);
 $border:       rgb(50, 50, 52);
 
-// ── Text ──────────────────────────────────────────────────────
+// -- Text ------------------------------------------------------
 $text:         rgb(242, 242, 242);
 $text-muted:   rgb(150, 150, 150);
 $text-dim:     rgb(96, 96, 96);
 
-// ── Device type accents ───────────────────────────────────────
+// -- Device type accents ---------------------------------------
 $c-modem:      rgb(180, 180, 180);
 $c-gateway:    rgb(100, 160, 220);
 $c-switch:     rgb(120, 190, 195);
@@ -28,36 +28,36 @@ $device-colors: (
   client:  $c-client,
 );
 
-// ── Status ────────────────────────────────────────────────────
+// -- Status ----------------------------------------------------
 $status-online:  rgb(90, 195, 140);
 $status-offline: rgb(210, 100, 100);
 $status-warning: rgb(225, 170, 90);
 
-// ── Grid ──────────────────────────────────────────────────────
+// -- Grid ------------------------------------------------------
 $grid-sm:       24px;
 $grid-lg:       120px;
 $grid-color-sm: rgba(50, 50, 52, 0.35);
 $grid-color-lg: rgba(50, 50, 52, 0.7);
 
-// ── Layout ────────────────────────────────────────────────────
+// -- Layout ----------------------------------------------------
 $bar-height:    46px;
 $font-stack:    'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
 
-// ── Radii ─────────────────────────────────────────────────────
+// -- Radii -----------------------------------------------------
 $radius-panel:    12px;
 $radius-card:     10px;
 $radius-dropdown: 10px;
 $radius-pill:     23px;
 
-// ── Transitions ───────────────────────────────────────────────
+// -- Transitions -----------------------------------------------
 $ease-slide: cubic-bezier(0.4, 0, 0.2, 1);
 $dur-slide:  0.22s;
 $dur-fast:   0.12s;
 
-// ── Stacking order ────────────────────────────────────────────
+// -- Stacking order --------------------------------------------
 // One source of truth so we don't accidentally make a deeper overlay sit
 // behind a shallower one.
 $z-context-menu:       1000;
 $z-modal-overlay:      2000;
-$z-stacked-overlay:    2050;  // icon-manager, import-modal — over the device modal
+$z-stacked-overlay:    2050;  // icon-manager, import-modal - over the device modal
 $z-icon-picker-overlay: 2100; // sits on TOP of the device modal AND the stacked group

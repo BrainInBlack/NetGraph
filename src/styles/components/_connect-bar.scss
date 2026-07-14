@@ -1,6 +1,6 @@
 @use '../variables' as *;
 
-// Connect-mode toggle button — own pill, left of the zoom bar.
+// Connect-mode toggle button - own pill, left of the zoom bar.
 // When pressed (`aria-pressed="true"`), it glows with the gateway-blue accent
 // to mirror the on-canvas connect-mode glow.
 #connect-toggle {

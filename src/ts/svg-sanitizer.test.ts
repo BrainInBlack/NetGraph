@@ -4,9 +4,9 @@ import { sanitizeSvg, MAX_SVG_LENGTH } from './svg-sanitizer';
 const wrap = (inner: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">${inner}</svg>`;
 
-// ── Parse failures ──────────────────────────────────────────────
+// -- Parse failures ----------------------------------------------
 
-describe('sanitizeSvg — parse failures', () => {
+describe('sanitizeSvg - parse failures', () => {
   it('returns null for empty input', () => {
     expect(sanitizeSvg('')).toBeNull();
   });
@@ -24,9 +24,9 @@ describe('sanitizeSvg — parse failures', () => {
   });
 });
 
-// ── Size cap ────────────────────────────────────────────────────
+// -- Size cap ----------------------------------------------------
 
-describe('sanitizeSvg — size cap', () => {
+describe('sanitizeSvg - size cap', () => {
   it('rejects SVG source over MAX_SVG_LENGTH', () => {
     // Pad a valid SVG past the cap with a long (harmless) path data string.
     const pad = 'L0 0'.repeat(MAX_SVG_LENGTH); // far exceeds the limit
@@ -42,9 +42,9 @@ describe('sanitizeSvg — size cap', () => {
   });
 });
 
-// ── Tag allow-list ──────────────────────────────────────────────
+// -- Tag allow-list ----------------------------------------------
 
-describe('sanitizeSvg — tag stripping', () => {
+describe('sanitizeSvg - tag stripping', () => {
   it('strips <script> tag and contents', () => {
     const out = sanitizeSvg(wrap('<script>alert(1)</script><circle cx="5" cy="5" r="3"/>'));
     expect(out).not.toBeNull();
@@ -114,9 +114,9 @@ describe('sanitizeSvg — tag stripping', () => {
   });
 });
 
-// ── Event handler attributes ────────────────────────────────────
+// -- Event handler attributes ------------------------------------
 
-describe('sanitizeSvg — event handlers', () => {
+describe('sanitizeSvg - event handlers', () => {
   it('strips onclick', () => {
     const out = sanitizeSvg(wrap('<circle cx="5" cy="5" r="3" onclick="alert(1)"/>'));
     expect(out!).not.toMatch(/onclick/i);
@@ -127,7 +127,7 @@ describe('sanitizeSvg — event handlers', () => {
     expect(out!).not.toMatch(/onload/i);
   });
 
-  it('strips arbitrary on* handlers (onerror, onmouseover, onfocus, …)', () => {
+  it('strips arbitrary on* handlers (onerror, onmouseover, onfocus, ...)', () => {
     const out = sanitizeSvg(wrap(
       '<circle cx="5" cy="5" r="3" onerror="x" onmouseover="x" onfocus="x" onsomething="x"/>'
     ));
@@ -135,9 +135,9 @@ describe('sanitizeSvg — event handlers', () => {
   });
 });
 
-// ── href / xlink:href ───────────────────────────────────────────
+// -- href / xlink:href -------------------------------------------
 
-describe('sanitizeSvg — href / xlink:href', () => {
+describe('sanitizeSvg - href / xlink:href', () => {
   it('allows fragment-only href on <use>', () => {
     const out = sanitizeSvg(wrap('<symbol id="s1"><circle cx="0" cy="0" r="1"/></symbol><use href="#s1"/>'));
     expect(out!).toMatch(/<use[^>]+href="#s1"/);
@@ -164,7 +164,7 @@ describe('sanitizeSvg — href / xlink:href', () => {
   });
 
   it('rejects fragment hrefs that contain disallowed characters', () => {
-    // The pattern allows [a-zA-Z0-9_\-:.] — a literal space or quote is rejected.
+    // The pattern allows [a-zA-Z0-9_\-:.] - a literal space or quote is rejected.
     const out = sanitizeSvg(wrap('<use href="#has space"/>'));
     expect(out!).not.toMatch(/href=/);
   });
@@ -175,9 +175,9 @@ describe('sanitizeSvg — href / xlink:href', () => {
   });
 });
 
-// ── URL-bearing attributes ──────────────────────────────────────
+// -- URL-bearing attributes --------------------------------------
 
-describe('sanitizeSvg — url() values', () => {
+describe('sanitizeSvg - url() values', () => {
   it('keeps fill="url(#frag)"', () => {
     const out = sanitizeSvg(wrap('<defs><linearGradient id="g"/></defs><rect fill="url(#g)"/>'));
     expect(out!).toMatch(/fill="url\(#g\)"/);
@@ -218,7 +218,7 @@ describe('sanitizeSvg — url() values', () => {
 
   it('drops filter even when it references a fragment (not on the allow-list)', () => {
     // `filter` appears in URL_BEARING_ATTRS so its url() values get validated,
-    // but it isn't on the SAFE_ATTRS allow-list — so it's dropped either way.
+    // but it isn't on the SAFE_ATTRS allow-list - so it's dropped either way.
     // User icons don't need filter support; only the renderer's own
     // connection-label halo uses filter, and that's applied in code.
     const out = sanitizeSvg(wrap('<defs/><rect filter="url(#blur)"/>'));
@@ -231,16 +231,16 @@ describe('sanitizeSvg — url() values', () => {
   });
 });
 
-// ── Mutation-XSS via non-element nodes ──────────────────────────
+// -- Mutation-XSS via non-element nodes --------------------------
 //
 // We parse as image/svg+xml (XML) but the app reinserts via innerHTML (HTML).
 // CDATA sections and comments survive XML serialization intact and can smuggle
 // markup that becomes live on HTML re-parse. The walk must strip them.
 
-describe('sanitizeSvg — non-element nodes (mXSS channel)', () => {
+describe('sanitizeSvg - non-element nodes (mXSS channel)', () => {
   // The headline vector: </title> inside CDATA breaks out on HTML re-parse,
   // turning the trailing <img onerror> into a live element. NB: XML parsers
-  // disagree on CDATA — Chromium (what the app runs in) parses it and our walk
+  // disagree on CDATA - Chromium (what the app runs in) parses it and our walk
   // strips the node; happy-dom rejects the whole input (null). Both are safe,
   // so we assert "null OR free of smuggled markup". The Chromium fix was
   // verified directly with a browser probe; the comment test below guards the
@@ -297,9 +297,9 @@ describe('sanitizeSvg — non-element nodes (mXSS channel)', () => {
   });
 });
 
-// ── URL filter bypasses ─────────────────────────────────────────
+// -- URL filter bypasses -----------------------------------------
 
-describe('sanitizeSvg — url() filter bypasses', () => {
+describe('sanitizeSvg - url() filter bypasses', () => {
   it('drops style using a CSS-escaped url token (\\75rl)', () => {
     const out = sanitizeSvg(wrap('<rect style="fill:\\75rl(http://evil/x.png)"/>'));
     expect(out!).not.toMatch(/style=/);
@@ -326,9 +326,9 @@ describe('sanitizeSvg — url() filter bypasses', () => {
   });
 });
 
-// ── Per-tag attribute allow-lists ───────────────────────────────
+// -- Per-tag attribute allow-lists -------------------------------
 
-describe('sanitizeSvg — per-tag attributes', () => {
+describe('sanitizeSvg - per-tag attributes', () => {
   it('keeps path-specific d and pathLength', () => {
     const out = sanitizeSvg(wrap('<path d="M0 0 L 10 10" pathLength="20"/>'));
     expect(out!).toMatch(/d="M0 0 L 10 10"/);
@@ -351,9 +351,9 @@ describe('sanitizeSvg — per-tag attributes', () => {
   });
 });
 
-// ── Global allowed attributes ───────────────────────────────────
+// -- Global allowed attributes -----------------------------------
 
-describe('sanitizeSvg — global attributes', () => {
+describe('sanitizeSvg - global attributes', () => {
   it('keeps id, class, transform, opacity on any tag', () => {
     const out = sanitizeSvg(wrap(
       '<g id="root" class="layer" transform="translate(5,5)" opacity="0.5"/>'
@@ -383,9 +383,9 @@ describe('sanitizeSvg — global attributes', () => {
   });
 });
 
-// ── Integration ─────────────────────────────────────────────────
+// -- Integration -------------------------------------------------
 
-describe('sanitizeSvg — end-to-end', () => {
+describe('sanitizeSvg - end-to-end', () => {
   it('returns a non-null string for a clean lucide-style icon', () => {
     const lucideStyle =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" '

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { buildClipboard, pasteClipboard } from './clipboard';
 import type { Device, Link, NetworkMap } from '../types';
 
-// ── Test fixtures ────────────────────────────────────────────
+// -- Test fixtures --------------------------------------------
 
 function device(id: string, x: number, y: number, extra: Partial<Device> = {}): Device {
   return {
@@ -40,7 +40,7 @@ function idGen(): () => string {
 
 const noSnap = (n: number) => n;
 
-// ── buildClipboard ───────────────────────────────────────────
+// -- buildClipboard -------------------------------------------
 
 describe('buildClipboard', () => {
   it('returns null when no selected devices are present in the map', () => {
@@ -84,7 +84,7 @@ describe('buildClipboard', () => {
   });
 });
 
-// ── pasteClipboard ───────────────────────────────────────────
+// -- pasteClipboard -------------------------------------------
 
 describe('pasteClipboard', () => {
   it('assigns fresh ids and remaps link endpoints', () => {
@@ -122,7 +122,7 @@ describe('pasteClipboard', () => {
     const m = map([device('a', 0, 0)], []);
     const clip = buildClipboard(m, new Set(['a']))!;
     const out = pasteClipboard(clip, 37, 13, idGen(), snapTo24);
-    // 37 → 48, 13 → 24
+    // 37 -> 48, 13 -> 24
     expect(out.devices[0]).toMatchObject({ x: 48, y: 24 });
   });
 
@@ -160,7 +160,7 @@ describe('pasteClipboard', () => {
 
   it('preserves every optional Device field through paste', () => {
     // Belt-and-braces against a future field being silently dropped by the
-    // spread in pasteClipboard — if anyone adds a new field to Device, they
+    // spread in pasteClipboard - if anyone adds a new field to Device, they
     // need to add it here too.
     const m = map([device('a', 0, 0, {
       ip: '10.0.0.1',

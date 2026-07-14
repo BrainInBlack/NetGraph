@@ -8,7 +8,7 @@ import { iconDisplayName } from '../../icons';
 import type { Device, DeviceType } from '../../types';
 import { showModal, dismissModal } from './shared';
 
-// ── Add / Edit Device ────────────────────────────────────────
+// -- Add / Edit Device ----------------------------------------
 
 export function showDeviceModal(device: Device | null, canvasX?: number, canvasY?: number, connectToId?: string): void {
   const isEdit = device !== null;
@@ -72,7 +72,7 @@ export function showDeviceModal(device: Device | null, canvasX?: number, canvasY
         </div>
         <div class="form-row">
           <label>Port</label>
-          <input type="number" id="modal-port" value="${device?.port ?? ''}" placeholder="—" />
+          <input type="number" id="modal-port" value="${device?.port ?? ''}" placeholder="-" />
         </div>
       </div>
       <div class="form-row">
@@ -117,7 +117,7 @@ export function showDeviceModal(device: Device | null, canvasX?: number, canvasY
   typeSelect.addEventListener('change', updateHostVisibility);
   updateHostVisibility();
 
-  // ── Notes counter ──────────────────────────────────────────
+  // -- Notes counter ------------------------------------------
   const notesField = q<HTMLTextAreaElement>(modal, '#modal-notes');
   const notesCount = q<HTMLElement>(modal, '#modal-notes-count');
   const updateNotesCount = () => {
@@ -126,7 +126,7 @@ export function showDeviceModal(device: Device | null, canvasX?: number, canvasY
   updateNotesCount();
   notesField.addEventListener('input', updateNotesCount);
 
-  // ── Icon picker ────────────────────────────────────────────
+  // -- Icon picker --------------------------------------------
   let pickedIconId: string | undefined = device?.iconId;
   const iconPreview = q<HTMLElement>(modal, '#modal-icon-preview');
   const iconLabel = q<HTMLElement>(modal, '#modal-icon-label');
@@ -149,7 +149,7 @@ export function showDeviceModal(device: Device | null, canvasX?: number, canvasY
     });
   });
 
-  // Card width — segmented control behaves like a radio group
+  // Card width - segmented control behaves like a radio group
   const widthGroup = q<HTMLElement>(modal, '#modal-width');
   widthGroup.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.width-option');
@@ -198,7 +198,7 @@ export function showDeviceModal(device: Device | null, canvasX?: number, canvasY
       map.updatedAt = new Date().toISOString();
 
       // Manage host link: remove old, add new (skipping if a link to the new
-      // host already exists — manual connect-mode draws, prior duplicates, etc.
+      // host already exists - manual connect-mode draws, prior duplicates, etc.
       // shouldn't pile up).
       if (oldHostId !== hostId) {
         if (oldHostId) {
@@ -233,7 +233,7 @@ export function showDeviceModal(device: Device | null, canvasX?: number, canvasY
 
       map.devices.push(newDevice);
 
-      // Auto-create link to host (skip if one already exists — shouldn't be
+      // Auto-create link to host (skip if one already exists - shouldn't be
       // possible on a brand-new device, but defensive against future edge cases).
       if (hostId && !linkExists(map.links, newDevice.id, hostId)) {
         map.links.push({

@@ -1,6 +1,6 @@
 # Contributing to NetGraph
 
-NetGraph is a vanilla-TypeScript single-page app — no framework. It's built with
+NetGraph is a vanilla-TypeScript single-page app - no framework. It's built with
 [Vite](https://vitejs.dev/), styled with SCSS, and stores everything in the
 browser's `localStorage`; there's no backend. State lives in module-scope
 variables and the DOM is the renderer.
@@ -13,7 +13,7 @@ see [README.md](../README.md). For the full architecture and conventions, see
 
 - [Node.js](https://nodejs.org/) 24 or newer (current LTS).
 
-Node is only needed to **build or develop** NetGraph — not to run a built copy.
+Node is only needed to **build or develop** NetGraph - not to run a built copy.
 The output is plain static files (and a single self-contained HTML file) that
 run in any modern browser.
 
@@ -33,15 +33,15 @@ npm run dev        # Vite dev server at http://localhost:5173 with hot reload
 ```
 
 > If you commit a change that deletes or renames a module, restart `npm run dev`
-> — Vite's HMR can't always reconcile a moved module graph and the page may go
+> - Vite's HMR can't always reconcile a moved module graph and the page may go
 > blank until a fresh start. It's not a code bug; `tsc` and the tests stay green.
 
 ## Building
 
 ```sh
 npm run build        # type-check, then build BOTH outputs
-npm run build:web    # multi-file build only      → dist/
-npm run build:single # single-file build only     → dist/download/netgraph.html
+npm run build:web    # multi-file build only      -> dist/
+npm run build:single # single-file build only     -> dist/download/netgraph.html
 npm run preview      # serve the production build locally
 ```
 
@@ -49,14 +49,14 @@ There are two build outputs:
 
 - A **multi-file build** for hosting on a webserver (split JS/CSS for caching).
 - A **single self-contained `netgraph.html`** with JS, CSS, and the favicon all
-  inlined — one file to move around, run from disk, or put on a USB stick.
+  inlined - one file to move around, run from disk, or put on a USB stick.
 
 ```
 dist/
-├── index.html            ← multi-file build (serve this from a webserver)
-├── assets/               ← JS, CSS, favicon
-└── download/
-    └── netgraph.html      ← single-file standalone build
+├-- index.html            <- multi-file build (serve this from a webserver)
+├-- assets/               <- JS, CSS, favicon
+└-- download/
+    └-- netgraph.html      <- single-file standalone build
 ```
 
 ## Tests & quality bar
@@ -68,7 +68,7 @@ npx tsc --noEmit   # type-check
 ```
 
 The bar for any change is a **clean `npx tsc --noEmit`** and **passing
-`npm test`**. There's no separate linter — `tsconfig.json` runs with `strict`,
+`npm test`**. There's no separate linter - `tsconfig.json` runs with `strict`,
 `noUnusedLocals`, `noUnusedParameters`, and `noFallthroughCasesInSwitch`, so the
 compiler is the linter.
 
@@ -81,9 +81,9 @@ than unit-tested.
 
 ## Project layout
 
-Single entry point at `src/ts/main.ts`. The detailed map — state flow, the
+Single entry point at `src/ts/main.ts`. The detailed map - state flow, the
 render pipeline, connection routing, and the data-validation / SVG-sanitizer
-security model — lives in [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md). Start there before changing
+security model - lives in [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md). Start there before changing
 routing, persistence, or anything that ingests untrusted data (imports, custom
 icons).
 
@@ -91,8 +91,8 @@ icons).
 
 The repo has two long-lived branches:
 
-- `main` — stable releases
-- `develop` — active development
+- `main` - stable releases
+- `develop` - active development
 
 Create your own branch for your work, then open a pull request into `develop`
 (or `main` for an urgent fix). Before you open it:

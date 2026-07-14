@@ -4,7 +4,7 @@ import { escapeHtml, q } from '../../util';
 import { closePanel } from '../sidebar';
 import { showModal, dismissModal } from './shared';
 
-// ── Delete Confirmation ──────────────────────────────────────
+// -- Delete Confirmation --------------------------------------
 
 export function showDeleteConfirm(deviceId: string): void {
   const state = getState();

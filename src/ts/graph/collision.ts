@@ -6,7 +6,7 @@ export interface Rect {
 }
 
 /**
- * Strict — a segment lying exactly on a rect edge doesn't count. Endpoints
+ * Strict - a segment lying exactly on a rect edge doesn't count. Endpoints
  * touching an edge are fine; the segment must enter the interior.
  */
 export function segmentIntersectsRect(seg: Segment, rect: Rect): boolean {

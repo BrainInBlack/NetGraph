@@ -14,7 +14,7 @@ export const axisOf = (s: LinkSide): Axis =>
 export const signOf = (s: LinkSide): 1 | -1 =>
   (s === 'right' || s === 'bottom') ? 1 : -1;
 
-// Axis-aligned by construction — every Segment from pathSegments has either
+// Axis-aligned by construction - every Segment from pathSegments has either
 // x1 === x2 or y1 === y2. segmentIntersectsRect and segmentsToPath both rely
 // on this invariant.
 export interface Segment {
@@ -26,7 +26,7 @@ const CORNER_RADIUS = 10;
 
 /**
  * Underlying axis-aligned skeleton of an orthogonal connection path. Three
- * shapes — Z (3 segments, same-axis sides, perpendicular distance OK),
+ * shapes - Z (3 segments, same-axis sides, perpendicular distance OK),
  * straight (1 segment, same-axis sides too close), L (2 segments, mixed-axis
  * sides). The renderer wraps these segments in rounded Q corners; the
  * collision check uses them directly. Single source of truth so the two
@@ -83,7 +83,7 @@ export function pathSegments(
  * Label anchor point for a segment skeleton: the midpoint of the *visible* span
  * of the path. Endpoints sit at card centers (the cards cover the line ends), so
  * `startInset` / `endInset` are the lengths tucked under the source and target
- * cards — their half-extent along the exit/entry axis. We center on the span
+ * cards - their half-extent along the exit/entry axis. We center on the span
  * between those two cards rather than on the raw center-to-center path, so the
  * label reads as centered *between the nodes*, not pulled toward the larger one.
  *
@@ -130,7 +130,7 @@ export function labelAnchor(
  * Serialize the segment skeleton as an SVG `d` string with rounded Q corners
  * at each junction. Segments are axis-aligned, so every junction is a 90°
  * turn. The corner radius is clamped to half the length of each adjacent
- * segment — for a Z's middle segment that's two corners sharing the run,
+ * segment - for a Z's middle segment that's two corners sharing the run,
  * which is why an over-tight Z (just past MIN_PERPENDICULAR) draws as a
  * smooth S without a straight middle.
  */

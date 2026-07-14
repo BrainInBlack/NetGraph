@@ -44,7 +44,7 @@ function inlineFavicon() {
  * Rename the emitted HTML file on disk. Vite names the single-file output
  * `index.html` (after its `index.html` entry); we want it served as
  * `netgraph.html` so the download has a meaningful name. Done in `writeBundle`
- * with Node's `fs` — no shell `mv` (not portable), and Rolldown forbids
+ * with Node's `fs` - no shell `mv` (not portable), and Rolldown forbids
  * mutating the bundle map in `generateBundle`.
  */
 function renameHtml(to: string) {
@@ -61,8 +61,8 @@ function renameHtml(to: string) {
 /**
  * Two build modes:
  *
- *   vite build                → dist/             (multi-file build for the webserver)
- *   vite build --mode single  → dist/download/    (single self-contained netgraph.html)
+ *   vite build                -> dist/             (multi-file build for the webserver)
+ *   vite build --mode single  -> dist/download/    (single self-contained netgraph.html)
  *
  * `npm run build` runs both.
  */
@@ -72,7 +72,7 @@ export default defineConfig(({ mode, command }) => {
     base: './',
     define: {
       __APP_VERSION__: JSON.stringify(appVersion),
-      // True only for the deployed multi-file web build — the one place
+      // True only for the deployed multi-file web build - the one place
       // download/netgraph.html actually exists.
       __WEB_BUILD__: JSON.stringify(command === 'build' && !single),
     },
