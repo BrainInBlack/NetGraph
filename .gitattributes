@@ -6,5 +6,5 @@
 *.jpg binary
 *.ico binary
 
-# Keep generated/vendored files out of diffs and language stats.
+# Generated / vendored - keep out of diffs and language stats.
 package-lock.json -diff linguist-generated

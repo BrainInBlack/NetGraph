@@ -8,11 +8,10 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
+# Markdown: trailing whitespace can be meaningful (hard line breaks).
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{sh,bash}]
-indent_size = 2
-
+# Makefiles require real tabs.
 [Makefile]
 indent_style = tab
