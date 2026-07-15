@@ -10,9 +10,9 @@ permissions:
   contents: read
 
 jobs:
-  build-and-test:
-    # Build is OS-independent (Vite + tsc), so a single Linux runner is enough.
-    # Pinned to Node 24 (current Active LTS), matching engines and the
+  build:
+    # Type-check, test, and build are OS-independent, so a single Linux runner is
+    # enough. Pinned to Node 24 (current Active LTS), matching engines and the
     # CONTRIBUTING support claim.
     strategy:
       fail-fast: false
@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Type-check
-        run: npx tsc --noEmit
+        run: npm run typecheck
       - name: Test
         run: npm test
       - name: Build (multi-file + single-file)
