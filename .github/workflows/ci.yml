@@ -34,3 +34,17 @@ jobs:
         run: npm test
       - name: Build (multi-file + single-file)
         run: npm run build
+
+  # Stable required-status gate. Branch protection requires only this job, so a
+  # Node-matrix bump or a rename of `build` never invalidates the required check.
+  ci-success:
+    needs: [build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify the build job succeeded
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "::error::build job did not succeed (result: ${{ needs.build.result }})"
+            exit 1
+          fi
