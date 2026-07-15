@@ -2,7 +2,7 @@
 
 Map your home or lab network in the browser - add your devices, draw how they're wired, label the bits that matter - and keep it all **local**: no backend, no accounts, no telemetry.
 
-![License: PolyForm NC 1.0.0](https://img.shields.io/badge/license-PolyForm%20NC%201.0.0-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/built%20with-Vite-646cff?logo=vite&logoColor=white) ![Local-first](https://img.shields.io/badge/data-100%25%20local-brightgreen) ![Offline](https://img.shields.io/badge/offline-single--file%20copy-informational) [![CI](https://github.com/BrainInBlack/NetGraph/actions/workflows/ci.yml/badge.svg)](https://github.com/BrainInBlack/NetGraph/actions/workflows/ci.yml)
+![License: MIT + Commons Clause](https://img.shields.io/badge/license-MIT%20%2B%20Commons%20Clause-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/built%20with-Vite-646cff?logo=vite&logoColor=white) ![Local-first](https://img.shields.io/badge/data-100%25%20local-brightgreen) ![Offline](https://img.shields.io/badge/offline-single--file%20copy-informational) [![CI](https://github.com/BrainInBlack/NetGraph/actions/workflows/ci.yml/badge.svg)](https://github.com/BrainInBlack/NetGraph/actions/workflows/ci.yml)
 
 ## Why
 
@@ -60,6 +60,8 @@ NetGraph ingests untrusted data in exactly two places - imported JSON bundles an
 
 ## License
 
-[PolyForm Noncommercial 1.0.0](LICENSE) (c) BrainInBlack - free for noncommercial use.
+[MIT + Commons Clause](LICENSE) (c) 2026 BrainInBlack - free to use (including
+inside a company), modify, and share; you just may not sell it. See the
+[Commons Clause](https://commonsclause.com/) for what "sell" means.
 
 Want to build NetGraph yourself or contribute? See [CONTRIBUTING.md](.github/CONTRIBUTING.md).

@@ -106,4 +106,4 @@ The [pull request template](PULL_REQUEST_TEMPLATE.md) has the full checklist.
 ## License
 
 By contributing you agree your contributions are licensed under
-[PolyForm Noncommercial 1.0.0](../LICENSE).
+[MIT + Commons Clause](../LICENSE).
