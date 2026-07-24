@@ -36,14 +36,13 @@ export const MAX_SVG_LENGTH = 64 * 1024;
 export function sanitizeSvg(text: string): string | null {
   if (text.length > MAX_SVG_LENGTH) return null;
 
-  // CodeQL flags this parse as `js/xss-through-dom` ("DOM text reinterpreted as
-  // HTML"). It is a false positive: this is the sanitizer's own entry point.
-  // The untrusted string is parsed here, then the tree is scrubbed against an
-  // allow-list of tags and attributes and walked over all child nodes (dropping
-  // CDATA, comments, and processing instructions, see the mXSS note below)
-  // before `root.outerHTML` is returned. Nothing reaches the DOM unsanitized.
-  // The alert is dismissed as a false positive in GitHub code scanning; keep
-  // this comment so the reasoning is visible at the source.
+  // A static analyzer may flag this parse as DOM-based XSS ("DOM text
+  // reinterpreted as HTML"). It is a false positive: this is the sanitizer's own
+  // entry point. The untrusted string is parsed here, then the tree is scrubbed
+  // against an allow-list of tags and attributes and walked over all child nodes
+  // (dropping CDATA, comments, and processing instructions, see the mXSS note
+  // below) before `root.outerHTML` is returned. Nothing reaches the DOM
+  // unsanitized.
   const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
   const root = doc.querySelector('svg');
   if (!root || doc.querySelector('parsererror')) return null;

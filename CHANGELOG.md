@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-07-24
+
+### Security
+
+- **Bumped `immutable` 5.1.6 -> 5.1.9** to clear two high-severity
+  denial-of-service advisories (GHSA-v56q-mh7h-f735, GHSA-xvcm-6775-5m9r).
+  `immutable` is a transitive **dev** dependency pulled in by `sass` and only
+  runs during the build, never in the shipped app - so the advisories were not
+  exploitable against users - but this clears the alerts.
+
 ### Changed
 
 - **Relicensed from PolyForm Noncommercial 1.0.0 to MIT + Commons Clause.**
@@ -15,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   modification, and free redistribution, and forbid only selling the software
   (per the Commons Clause). Updated `LICENSE`, `package.json`, the README badge
   and license note, and CONTRIBUTING.
+- **Updated dependencies** - `lucide-static` 1.24.0 -> 1.26.0 (Lucide icon set),
+  plus build and CI tooling (`happy-dom`, `sass`, `actions/checkout`).
 
 ## [1.3.0] - 2026-06-25
 
@@ -56,5 +68,6 @@ describes the app as it stands at that release.
 - **Touch support** - drag to pan, pinch to zoom, and long-press for context
   menus on tablets.
 
-[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/BrainInBlack/NetGraph/releases/tag/v1.3.0
