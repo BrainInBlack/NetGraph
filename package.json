@@ -1,7 +1,7 @@
 {
   "name": "netgraph",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Browser-based local network visualizer - map your home or lab network, stored entirely in localStorage with no backend.",
   "license": "SEE LICENSE IN LICENSE",
   "author": "BrainInBlack <braininblack@gmail.com>",

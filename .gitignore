@@ -100,3 +100,13 @@ repomix-output.*
 private/
 # Deploy script - holds server/target details, never shipped.
 /scripts/deploy.sh
+
+# --- Syncthing artifacts -------------------------------------
+# The whole Khemul folder is synced between machines via Syncthing; never track
+# its housekeeping files or conflict copies.
+.stfolder/
+.stignore
+.stversions/
+.syncthing.*.tmp
+~syncthing~*.tmp
+*.sync-conflict-*
