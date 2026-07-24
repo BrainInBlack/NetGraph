@@ -11,6 +11,13 @@ permissions:
 
 jobs:
   build:
+    # Skip the redundant re-run for same-repo PRs. A branch push already ran this
+    # exact commit through CI, and branch-protection reads status per head SHA
+    # regardless of the triggering event - so a develop->main release PR (or a
+    # Dependabot PR into develop) is already validated by its branch's push run.
+    # Fork PRs are the exception: a fork branch never fires `push` here, so they
+    # still need the pull_request run.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     # Type-check, test, and build are OS-independent, so a single Linux runner is
     # enough. Pinned to Node 24 (current Active LTS), matching engines and the
     # CONTRIBUTING support claim.
@@ -44,7 +51,11 @@ jobs:
     steps:
       - name: Verify the build job succeeded
         run: |
-          if [ "${{ needs.build.result }}" != "success" ]; then
-            echo "::error::build job did not succeed (result: ${{ needs.build.result }})"
+          # 'skipped' means a same-repo PR whose head commit the branch push
+          # already validated (see the build job's if:) - treat it as a pass so
+          # the required ci-success gate still reports green without re-building.
+          result="${{ needs.build.result }}"
+          if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
+            echo "::error::build job did not succeed (result: $result)"
             exit 1
           fi
