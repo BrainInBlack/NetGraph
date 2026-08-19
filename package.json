@@ -41,10 +41,10 @@
     "deploy": "bash scripts/deploy.sh"
   },
   "devDependencies": {
-    "happy-dom": "^20.11.1",
-    "sass": "^1.101.6",
+    "happy-dom": "^20.11.2",
+    "sass": "^1.102.0",
     "typescript": "~7.0.2",
-    "vite": "^8.1.5",
+    "vite": "^8.2.1",
     "vite-plugin-singlefile": "^2.3.3",
     "vitest": "^4.1.10"
   },
