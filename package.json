@@ -49,6 +49,6 @@
     "vitest": "^4.1.10"
   },
   "dependencies": {
-    "lucide-static": "^1.31.0"
+    "lucide-static": "^1.38.0"
   }
 }
