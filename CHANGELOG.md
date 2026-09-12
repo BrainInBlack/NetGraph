@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2026-09-12
+
+### Changed
+
+- **Updated the Lucide icon set** - `lucide-static` 1.26.0 -> 1.45.0, which adds
+  new device icons to pick from. Existing maps are unaffected; icons already
+  placed keep their current glyph.
+- **Updated the build and test tooling** - `vite` 8.1.5 -> 8.3.0, `sass` 1.101.6
+  -> 1.104.1, `happy-dom` 20.11.1 -> 20.14.5, and `vitest` 4.1.10 -> 5.0.0 (a
+  major bump; the test setup now installs its in-memory `localStorage` with
+  `defineProperty`, because vitest 5's happy-dom environment defines that
+  property with only a getter and a plain assignment throws). None of this ships
+  in NetGraph.
+
+### Security
+
+- **Cleared three dependency advisories.** All are in **development**-only
+  packages that run while building or testing NetGraph and are never part of the
+  shipped app, so none were exploitable against users - this clears the alerts
+  rather than fixing a live hole:
+  - `nanoid` (high) -
+    [CVE-2026-67213](https://nvd.nist.gov/vuln/detail/CVE-2026-67213): custom
+    generators could loop indefinitely when the size is zero.
+  - `postcss` (medium) -
+    [CVE-2026-69153](https://nvd.nist.gov/vuln/detail/CVE-2026-69153): an
+    attacker-controlled `sourceMappingURL` could read arbitrary `.map` files
+    when `from` is unset.
+  - `vitest` / `@vitest/mocker` (medium) -
+    [CVE-2026-84373](https://nvd.nist.gov/vuln/detail/CVE-2026-84373):
+    a redirect mock's target was not validated against the dev server's
+    file-serving allow-list, so an arbitrary local file could be read through
+    the unauthenticated `mockerPlugin` export. NetGraph uses neither browser
+    mode nor a public dev server.
+
 ## [1.3.1] - 2026-07-24
 
 ### Security
@@ -68,6 +102,7 @@ describes the app as it stands at that release.
 - **Touch support** - drag to pan, pinch to zoom, and long-press for context
   menus on tablets.
 
-[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.2...HEAD
+[1.3.2]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/BrainInBlack/NetGraph/releases/tag/v1.3.0
