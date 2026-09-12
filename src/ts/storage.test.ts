@@ -6,9 +6,11 @@ import type { AppState, NetworkMap } from './types';
 // that can't go through saveState.
 const KEY = 'netgraph-state';
 
-// happy-dom under vitest doesn't supply a working `localStorage`, so storage.ts
-// (which uses the bare `localStorage` global) has nothing to read or write.
-// Install a minimal in-memory Storage so the real load/save/migrate paths run.
+// We want a clean in-memory `localStorage` per test, so storage.ts (which uses
+// the bare `localStorage` global) exercises the real load/save/migrate paths.
+// Older vitest's happy-dom env supplied no working localStorage at all; vitest 5
+// defines a getter-only one on the window, which a plain assignment throws
+// against - so install it with defineProperty, which works in both.
 function makeStorage(): Storage {
   const m = new Map<string, string>();
   return {
@@ -25,7 +27,13 @@ function map(over: Partial<NetworkMap> = {}): NetworkMap {
   return { id: 'm1', name: 'Map', devices: [], links: [], createdAt: 't', updatedAt: 't', ...over };
 }
 
-beforeEach(() => { globalThis.localStorage = makeStorage(); });
+beforeEach(() => {
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: makeStorage(),
+    configurable: true,
+    writable: true,
+  });
+});
 afterEach(() => vi.restoreAllMocks());
 
 // -- createEmptyMap ----------------------------------------------
