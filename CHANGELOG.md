@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.3] - 2026-09-15
+
+### Changed
+
+- **Building NetGraph now needs Node 26** - `engines` goes from `>=24` to `>=26`,
+  and CI runs on Node 26 instead of 24. This only matters if you build or work
+  on NetGraph from source; on an older Node, `npm install` warns about the
+  unsupported engine.
+- **Updated the Lucide icon set** - `lucide-static` 1.45.0 -> 1.46.0. None of
+  the icons NetGraph ships changed, so maps look exactly the same.
+- **Updated the test tooling** - `vitest` 5.0.0 -> 5.0.1. None of this ships in
+  NetGraph.
+
 ## [1.3.2] - 2026-09-12
 
 ### Changed
@@ -102,7 +115,8 @@ describes the app as it stands at that release.
 - **Touch support** - drag to pan, pinch to zoom, and long-press for context
   menus on tablets.
 
-[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.2...HEAD
+[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.3...HEAD
+[1.3.3]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/BrainInBlack/NetGraph/releases/tag/v1.3.0
