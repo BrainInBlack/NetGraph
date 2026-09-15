@@ -19,12 +19,12 @@ jobs:
     # still need the pull_request run.
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     # Type-check, test, and build are OS-independent, so a single Linux runner is
-    # enough. Pinned to Node 24 (current Active LTS), matching engines and the
-    # CONTRIBUTING support claim.
+    # enough. Pinned to Node 26 (Current release line, Active LTS from October
+    # 2026), matching the local toolchain and engines (>=26).
     strategy:
       fail-fast: false
       matrix:
-        node: [24]
+        node: [26]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
