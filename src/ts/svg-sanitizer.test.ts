@@ -318,6 +318,38 @@ describe('sanitizeSvg - url() filter bypasses', () => {
     expect(out!).not.toMatch(/evil/);
   });
 
+  // A quoted URL containing `'`, `"` or `)` is still a valid url() to CSS, but
+  // defeated the old "extract the target" regex - it matched nothing and the
+  // value passed. The root <svg>'s background fetches on render (beacon).
+  it.each([
+    ['single quote', `<svg xmlns="http://www.w3.org/2000/svg" style="background:url(&quot;http://evil/b?a='&quot;)"/>`],
+    ['double quote', `<svg xmlns="http://www.w3.org/2000/svg" style='background:url("http://evil/b?a=&quot;")'/>`],
+    ['close paren', `<svg xmlns="http://www.w3.org/2000/svg" style='background-image:url("http://evil/b?)")'/>`],
+  ])('drops style with an off-document url() holding a %s', (_label, svg) => {
+    const out = sanitizeSvg(svg);
+    expect(out!).not.toMatch(/style=/);
+    expect(out!).not.toMatch(/evil/);
+  });
+
+  it('drops fill with an off-document url() holding a close paren', () => {
+    const out = sanitizeSvg(wrap(`<rect fill='url("http://evil/a.svg?)#m")'/>`));
+    expect(out!).not.toMatch(/fill=/);
+    expect(out!).not.toMatch(/evil/);
+  });
+
+  it('drops a fragment url() whose id holds characters outside the id set', () => {
+    const out = sanitizeSvg(wrap(`<rect fill="url('#a)b')"/>`));
+    expect(out!).not.toMatch(/fill=/);
+  });
+
+  it('keeps quoted fragment url() refs', () => {
+    const out = sanitizeSvg(wrap(
+      `<defs><linearGradient id="g"/><mask id="m"/></defs><rect style="fill:url('#g');mask:url(&quot;#m&quot;)"/>`
+    ));
+    expect(out!).toMatch(/style="[^"]*url\('#g'\)/);
+    expect(out!).toMatch(/url\(&quot;#m&quot;\)/);
+  });
+
   it('still keeps a clean style with only fragment url() refs', () => {
     const out = sanitizeSvg(wrap(
       '<defs><linearGradient id="g"/></defs><rect style="fill:url(#g);opacity:0.5"/>'

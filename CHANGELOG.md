@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.4] - 2026-09-30
+
+### Security
+
+- **Custom SVG icons can no longer load external URLs** - a crafted icon could
+  hide an off-site `url(...)` in its `style` or paint attributes by putting a
+  quote or `)` inside the URL, which slipped past the sanitizer. Opening a map
+  that used such an icon made the browser contact the attacker's server,
+  revealing your IP address and when you opened it. No script could run. The
+  check now rejects anything but plain same-icon `url(#id)` references, and
+  icons already saved in the browser are cleaned the next time NetGraph loads.
+- **Added a Content Security Policy** - as a second line of defense, the page
+  (and the offline copy) now tells the browser it may not load images, scripts
+  or anything else from another site, or send data anywhere. Even if a crafted
+  map or icon ever slipped past the sanitizer again, it could not contact an
+  outside server.
+
+### Changed
+
+- **Updated the Lucide icon set** - `lucide-static` 1.46.0 -> 1.47.0. None of
+  the icons NetGraph ships changed, so maps look exactly the same.
+
 ## [1.3.3] - 2026-09-15
 
 ### Changed
@@ -115,7 +137,8 @@ describes the app as it stands at that release.
 - **Touch support** - drag to pan, pinch to zoom, and long-press for context
   menus on tablets.
 
-[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.3...HEAD
+[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.4...HEAD
+[1.3.4]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.0...v1.3.1

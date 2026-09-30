@@ -3,6 +3,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 import { renameSync } from 'node:fs';
 import { join } from 'node:path';
 import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
 
 const { version: appVersion } = createRequire(import.meta.url)('./package.json') as { version: string };
 
@@ -35,6 +36,40 @@ function inlineFavicon() {
         const escapedName = favicon.fileName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         html.source = html.source.replace(new RegExp(`href="[^"]*${escapedName}"`), `href="${dataUrl}"`);
         delete bundle[favicon.fileName];
+      },
+    },
+  };
+}
+
+/**
+ * Allow the single-file build's inlined script under the CSP in index.html.
+ * vite-plugin-singlefile turns `<script src>` into an inline `<script>`, which
+ * `script-src 'self'` blocks - so hash every inline script body and append the
+ * `'sha256-...'` sources to script-src (keeps 'unsafe-inline' out of the
+ * policy). Runs in the `post` generateBundle phase, after singlefile inlined
+ * and minified the code, so the hash covers the exact shipped bytes. Fails the
+ * build if the CSP marker is missing rather than shipping a page that won't run.
+ */
+function cspInlineScriptHashes() {
+  return {
+    name: 'csp-inline-script-hashes',
+    enforce: 'post' as const,
+    generateBundle: {
+      order: 'post' as const,
+      handler(_opts: unknown, bundle: Record<string, { fileName: string; source?: string | Uint8Array }>) {
+        const html = Object.values(bundle).find(b => b.fileName === 'index.html');
+        if (!html || typeof html.source !== 'string') return;
+        const hashes = [...html.source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)]
+          .map(m => m[1])
+          .filter(body => body.length > 0)
+          .map(body => `'sha256-${createHash('sha256').update(body, 'utf8').digest('base64')}'`);
+        // Anchored to the CSP meta's content attribute, so a mention of the
+        // directive elsewhere (e.g. an HTML comment) can't take the hashes.
+        const CSP_SCRIPT_SRC = /(http-equiv="Content-Security-Policy"\s+content="[^"]*?script-src 'self')/;
+        if (!CSP_SCRIPT_SRC.test(html.source)) {
+          throw new Error("csp-inline-script-hashes: no \"script-src 'self'\" in the index.html CSP meta");
+        }
+        html.source = html.source.replace(CSP_SCRIPT_SRC, `$1 ${hashes.join(' ')}`);
       },
     },
   };
@@ -76,7 +111,9 @@ export default defineConfig(({ mode, command }) => {
       // download/netgraph.html actually exists.
       __WEB_BUILD__: JSON.stringify(command === 'build' && !single),
     },
-    plugins: single ? [viteSingleFile(), inlineFavicon(), renameHtml('netgraph.html')] : [],
+    plugins: single
+      ? [viteSingleFile(), inlineFavicon(), cspInlineScriptHashes(), renameHtml('netgraph.html')]
+      : [],
     build: {
       outDir: single ? 'dist/download' : 'dist',
       emptyOutDir: true,
