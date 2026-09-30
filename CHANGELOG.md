@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Custom icon uploads are SVG only** - the upload buttons in the icon picker
+  and Manage Icons no longer take PNG or JPG files. PNG/JPG icons you already
+  have, or that come in with an imported map, keep working and still show on
+  your devices; you just can't add new ones.
+
 ## [1.3.4] - 2026-09-30
 
 ### Security

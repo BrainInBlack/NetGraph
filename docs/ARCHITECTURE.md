@@ -101,7 +101,7 @@ Per-field caps are defined once (name, ip, mac, tags, etc.); SVG custom icons al
 
 **mXSS defense - the walk must visit *all* child nodes, not just elements.** We parse as `image/svg+xml` (XML) but the app reinserts the result via `innerHTML` (HTML). A CDATA section or comment is inert in XML, survives `outerHTML` serialization intact, and on HTML re-parse can break out into live markup (e.g. `<title><![CDATA[</title><img onerror=...>]]></title>` yields a live `<img>` in Chromium). So the sanitizer walks `childNodes` and drops everything that isn't an allow-listed element or a plain text node (text is safe - serialization escapes it). Never narrow this back to `.children`.
 
-`sanitizeSvg` also enforces `MAX_SVG_LENGTH` (64 KB) on the source string and returns `null` if exceeded - the single size chokepoint for both ingest paths. Raster uploads have a separate, larger pre-downscale cap in `icon-upload.ts` (`IMAGE_MAX_BYTES`, 256 KB). `icon-upload.ts` is the shared module that the icon picker and the Manage Icons modal both consume - `readFileAsIcon` parses + sanitizes + downscales in one place so both flows produce identical `CustomIcon`s.
+`sanitizeSvg` also enforces `MAX_SVG_LENGTH` (64 KB) on the source string and returns `null` if exceeded - the single size chokepoint for both ingest paths. `icon-upload.ts` is the shared module that the icon picker and the Manage Icons modal both consume - `readFileAsIcon` checks + sanitizes in one place so both flows produce identical `CustomIcon`s. Uploads are SVG-only; raster (`kind: 'image'`) icons are still accepted from imports and localStorage so older maps keep them, but can't be created (decoding a raster upload needs a `blob:` URL, which the CSP doesn't allow).
 
 ### Modals & overlays
 

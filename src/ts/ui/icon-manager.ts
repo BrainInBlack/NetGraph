@@ -1,7 +1,7 @@
 import { getState, setState } from '../state';
 import { renderIconHtml } from '../icons';
 import { bindOverlayDismiss, escapeHtml, q, pushModalLock, popModalLock, ensureStackedOverlay, Z_STACKED_OVERLAY, trapFocus } from '../util';
-import { readFileAsIcon, IMAGE_MAX_BYTES, IMAGE_MAX_DIMENSION, MAX_SVG_LENGTH } from './icon-upload';
+import { readFileAsIcon, MAX_SVG_LENGTH } from './icon-upload';
 import type { CustomIcon } from '../types';
 
 /**
@@ -56,10 +56,10 @@ function render(overlay: HTMLElement): void {
         ${tilesHtml}
         <div class="icon-picker-upload">
           <label class="upload-btn">
-            Upload SVG / PNG / JPG
-            <input type="file" accept=".svg,image/svg+xml,image/png,image/jpeg" />
+            Upload SVG
+            <input type="file" accept=".svg,image/svg+xml" />
           </label>
-          <span class="upload-hint">SVG up to ${MAX_SVG_LENGTH / 1024} KB (inherits theme color) · PNG/JPG up to ${IMAGE_MAX_BYTES / 1024} KB (downscaled to ${IMAGE_MAX_DIMENSION}px)</span>
+          <span class="upload-hint">SVG up to ${MAX_SVG_LENGTH / 1024} KB (inherits theme color)</span>
         </div>
       </div>
       <div class="modal-footer">
