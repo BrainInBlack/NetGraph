@@ -162,11 +162,13 @@ function areAllUrlsFragmentRefs(value: string): boolean {
   if (/\\/.test(value)) return false;
   if (/(?:image-set|image|cross-fade|element)\s*\(/i.test(value)) return false;
 
-  const URL_TOKEN = /url\(\s*(['"]?)([^'")]*)\1\s*\)/gi;
-  let match: RegExpExecArray | null;
-  while ((match = URL_TOKEN.exec(value)) !== null) {
-    const target = match[2].trim();
-    if (!target.startsWith('#')) return false;
-  }
-  return true;
+  // Fail closed: count every `url(` opener, then count only the strict
+  // fragment-ref forms. Any opener the strict pattern can't account for -
+  // e.g. a quoted URL holding `'`, `"` or `)`, which a looser "extract the
+  // target" regex silently fails to match - makes the counts differ and the
+  // value is rejected.
+  const openers = value.match(/url\s*\(/gi)?.length ?? 0;
+  const fragmentRefs =
+    value.match(/url\(\s*(['"]?)#[a-zA-Z0-9_\-:.]+\1\s*\)/gi)?.length ?? 0;
+  return openers === fragmentRefs;
 }

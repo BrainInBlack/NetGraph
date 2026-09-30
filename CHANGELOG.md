@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **Custom SVG icons can no longer load external URLs** - a crafted icon could
+  hide an off-site `url(...)` in its `style` or paint attributes by putting a
+  quote or `)` inside the URL, which slipped past the sanitizer. Opening a map
+  that used such an icon made the browser contact the attacker's server,
+  revealing your IP address and when you opened it. No script could run. The
+  check now rejects anything but plain same-icon `url(#id)` references, and
+  icons already saved in the browser are cleaned the next time NetGraph loads.
+
 ## [1.3.3] - 2026-09-15
 
 ### Changed
