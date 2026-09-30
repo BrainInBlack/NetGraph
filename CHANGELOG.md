@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.4] - 2026-09-30
+
 ### Security
 
 - **Custom SVG icons can no longer load external URLs** - a crafted icon could
@@ -21,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   or anything else from another site, or send data anywhere. Even if a crafted
   map or icon ever slipped past the sanitizer again, it could not contact an
   outside server.
+
+### Changed
+
+- **Updated the Lucide icon set** - `lucide-static` 1.46.0 -> 1.47.0. None of
+  the icons NetGraph ships changed, so maps look exactly the same.
 
 ## [1.3.3] - 2026-09-15
 
@@ -130,7 +137,8 @@ describes the app as it stands at that release.
 - **Touch support** - drag to pan, pinch to zoom, and long-press for context
   menus on tablets.
 
-[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.3...HEAD
+[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.4...HEAD
+[1.3.4]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.0...v1.3.1
