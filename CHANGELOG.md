@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   revealing your IP address and when you opened it. No script could run. The
   check now rejects anything but plain same-icon `url(#id)` references, and
   icons already saved in the browser are cleaned the next time NetGraph loads.
+- **Added a Content Security Policy** - as a second line of defense, the page
+  (and the offline copy) now tells the browser it may not load images, scripts
+  or anything else from another site, or send data anywhere. Even if a crafted
+  map or icon ever slipped past the sanitizer again, it could not contact an
+  outside server.
 
 ## [1.3.3] - 2026-09-15
 

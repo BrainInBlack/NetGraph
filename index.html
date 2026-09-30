@@ -2,6 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Content Security Policy - defense-in-depth behind the SVG sanitizer and
+         escapeHtml: nothing may load from or talk to another origin.
+         - style-src needs 'unsafe-inline': cards, panels and custom icons carry
+           style="" attributes set via innerHTML.
+         - img-src data:/blob: - raster custom icons are data: URLs; the upload
+           path decodes files through a blob: object URL.
+         - The single-file build (dist/download/netgraph.html) inlines its JS;
+           vite.config.ts cspInlineScriptHashes() appends that script's sha256
+           to script-src at build time, so keep script-src as exactly 'self'. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'" />
     <link rel="icon" type="image/svg+xml" href="./src/assets/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NetGraph</title>
