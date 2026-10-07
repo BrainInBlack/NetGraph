@@ -95,6 +95,8 @@ GEMINI.md
 repomix-output.*
 .repomix/
 .ai/
+# graphify knowledge graph (local analysis output)
+graphify-out/
 
 # --- Personal data - kept out of the public repo -------------
 private/
