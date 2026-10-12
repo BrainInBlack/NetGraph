@@ -7,12 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-12
+
 ### Changed
 
 - **Custom icon uploads are SVG only** - the upload buttons in the icon picker
   and Manage Icons no longer take PNG or JPG files. PNG/JPG icons you already
   have, or that come in with an imported map, keep working and still show on
   your devices; you just can't add new ones.
+- **Updated the Lucide icon set** - `lucide-static` 1.47.0 -> 1.52.0. None of
+  the icons NetGraph ships changed, so maps look exactly the same.
 
 ## [1.3.4] - 2026-09-30
 
@@ -144,7 +148,8 @@ describes the app as it stands at that release.
 - **Touch support** - drag to pan, pinch to zoom, and long-press for context
   menus on tablets.
 
-[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.4...HEAD
+[Unreleased]: https://github.com/BrainInBlack/NetGraph/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/BrainInBlack/NetGraph/compare/v1.3.1...v1.3.2
