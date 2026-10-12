@@ -27,9 +27,8 @@
  * under 1 KB); 64 KB is generous headroom for an elaborate multi-path icon
  * while bounding parse/serialize cost and localStorage footprint. Oversized
  * input is rejected outright (`null`). This is the single size chokepoint -
- * both the import path (`parse-shapes`) and the upload path (`icon-picker`)
- * flow through `sanitizeSvg`, so the limit holds everywhere. Raster uploads
- * have their own separate, larger pre-downscale cap in `icon-picker`.
+ * both the import path (`parse-shapes`) and the upload path (`icon-upload`)
+ * flow through `sanitizeSvg`, so the limit holds everywhere.
  */
 export const MAX_SVG_LENGTH = 64 * 1024;
 

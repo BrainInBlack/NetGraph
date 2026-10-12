@@ -3,7 +3,7 @@ import { ICON_LIBRARY, renderIconHtml } from '../icons';
 import { DEVICE_ICONS } from '../device-config';
 import { bindOverlayDismiss, escapeHtml, pushModalLock, popModalLock, ensureStackedOverlay, Z_ICON_PICKER_OVERLAY, trapFocus } from '../util';
 import { confirmDeleteCustomIcon } from './icon-manager';
-import { readFileAsIcon, IMAGE_MAX_BYTES, IMAGE_MAX_DIMENSION, MAX_SVG_LENGTH } from './icon-upload';
+import { readFileAsIcon, MAX_SVG_LENGTH } from './icon-upload';
 import type { DeviceType } from '../types';
 
 interface OpenOptions {
@@ -102,10 +102,10 @@ function renderModal(): string {
         ${customHtml}
         <div class="icon-picker-upload">
           <label class="upload-btn">
-            Upload SVG / PNG / JPG
-            <input type="file" accept=".svg,image/svg+xml,image/png,image/jpeg" />
+            Upload SVG
+            <input type="file" accept=".svg,image/svg+xml" />
           </label>
-          <span class="upload-hint">SVG up to ${MAX_SVG_LENGTH / 1024} KB (inherits theme color) · PNG/JPG up to ${IMAGE_MAX_BYTES / 1024} KB (downscaled to ${IMAGE_MAX_DIMENSION}px)</span>
+          <span class="upload-hint">SVG up to ${MAX_SVG_LENGTH / 1024} KB (inherits theme color)</span>
         </div>
       </div>
       <div class="modal-footer">

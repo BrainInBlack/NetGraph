@@ -42,7 +42,7 @@ export interface Device {
 export interface CustomIcon {
   id: string;
   name: string;
-  /** 'svg' = inline SVG markup; 'image' = base64 data URL (PNG/JPG) */
+  /** 'svg' = inline SVG markup; 'image' = base64 data URL (PNG/JPG) - legacy, import/load only (uploads are SVG-only) */
   kind: 'svg' | 'image';
   data: string;
   createdAt: string;

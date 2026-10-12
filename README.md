@@ -15,7 +15,7 @@ You want a picture of your home or lab network - what's plugged into what, which
 - **Connect mode** - wire up fast: **Hub** fan-out from one device, **Single** one-link-at-a-time, or **Advanced** (the editor opens after each link). A live preview line follows the cursor and turns amber to block duplicates.
 - **Multi-select** - lasso a group, then copy, paste, duplicate, or delete it; drag any member to move the whole set together.
 - **VMs & containers** - mark a device as hosted on a parent, so the nesting is explicit.
-- **Custom icons** - the built-in [Lucide](https://lucide.dev/) set or your own SVG / PNG / JPG uploads, shared across every map.
+- **Custom icons** - the built-in [Lucide](https://lucide.dev/) set or your own SVG uploads, shared across every map.
 - **Multiple maps** - keep home, the lab, and a friend's network side by side and switch in a click.
 - **Import / export** - plain JSON, for backups and sharing.
 - **Offline copy** - the *Download Offline Copy* menu saves the entire app as one standalone HTML file.
