@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { viteSingleFile } from 'vite-plugin-singlefile';
 import { renameSync } from 'node:fs';
 import { join } from 'node:path';
 import { createRequire } from 'node:module';
@@ -8,8 +7,44 @@ import { createHash } from 'node:crypto';
 const { version: appVersion } = createRequire(import.meta.url)('./package.json') as { version: string };
 
 /**
+ * Inline the bundled JS and CSS into index.html for the single-file build:
+ * each `<script src>` becomes an inline `<script>`, each stylesheet `<link>` a
+ * `<style>`, and the inlined files are dropped from the bundle. Replaces
+ * vite-plugin-singlefile (whose micromatch -> braces chain carries an unpatched
+ * advisory) - the build config below does the rest (one JS chunk, one CSS file,
+ * assets inlined). `</script` and `<!--` in the code are escaped so the inline
+ * script can't end early.
+ */
+function inlineAssets() {
+  const escape = (name: string) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return {
+    name: 'inline-assets',
+    enforce: 'post' as const,
+    generateBundle(_opts: unknown, bundle: Record<string, { fileName: string; code?: string; source?: string | Uint8Array }>) {
+      const html = bundle['index.html'];
+      if (!html || typeof html.source !== 'string') return;
+      let out = html.source;
+      for (const file of Object.values(bundle)) {
+        const name = escape(file.fileName);
+        if (/\.[mc]?js$/.test(file.fileName) && file.code != null) {
+          const code = file.code.replace(/<(\/script>|!--)/g, '\\x3C$1').trim();
+          out = out.replace(new RegExp(`<script([^>]*?) src="(?:[^"]*?/)?${name}"([^>]*)></script>`),
+            (_, before: string, after: string) => `<script${before}${after}>${code}</script>`);
+        } else if (file.fileName.endsWith('.css') && typeof file.source === 'string') {
+          const css = file.source.replace('@charset "UTF-8";', '').trim();
+          out = out.replace(new RegExp(`<link([^>]*?) href="(?:[^"]*?/)?${name}"([^>]*)>`),
+            (_, before: string, after: string) => `<style${before}${after}>${css}</style>`);
+        } else continue;
+        delete bundle[file.fileName];
+      }
+      html.source = out;
+    },
+  };
+}
+
+/**
  * Inline the favicon as a base64 data URL so the final `dist/` is just one
- * `index.html` file. vite-plugin-singlefile inlines JS/CSS but ignores
+ * `index.html` file. inlineAssets() handles JS/CSS but ignores
  * `<link rel="icon">` references, so we rewrite the href in `generateBundle`
  * (runs after all plugins have finished transforming the HTML) and drop the
  * separate favicon asset from the bundle.
@@ -43,10 +78,10 @@ function inlineFavicon() {
 
 /**
  * Allow the single-file build's inlined script under the CSP in index.html.
- * vite-plugin-singlefile turns `<script src>` into an inline `<script>`, which
+ * inlineAssets() turns `<script src>` into an inline `<script>`, which
  * `script-src 'self'` blocks - so hash every inline script body and append the
  * `'sha256-...'` sources to script-src (keeps 'unsafe-inline' out of the
- * policy). Runs in the `post` generateBundle phase, after singlefile inlined
+ * policy). Runs in the `post` generateBundle phase, after inlineAssets inlined
  * and minified the code, so the hash covers the exact shipped bytes. Fails the
  * build if the CSP marker is missing rather than shipping a page that won't run.
  */
@@ -112,12 +147,21 @@ export default defineConfig(({ mode, command }) => {
       __WEB_BUILD__: JSON.stringify(command === 'build' && !single),
     },
     plugins: single
-      ? [viteSingleFile(), inlineFavicon(), cspInlineScriptHashes(), renameHtml('netgraph.html')]
+      ? [inlineAssets(), inlineFavicon(), cspInlineScriptHashes(), renameHtml('netgraph.html')]
       : [],
     build: {
       outDir: single ? 'dist/download' : 'dist',
       emptyOutDir: true,
       minify: single,
+      // Single-file build: everything in one JS chunk and one CSS file at the
+      // outDir root, with assets inlined, so inlineAssets() leaves no files behind.
+      ...(single && {
+        assetsDir: '',
+        assetsInlineLimit: () => true,
+        chunkSizeWarningLimit: Infinity,
+        cssCodeSplit: false,
+        rolldownOptions: { output: { codeSplitting: false } },
+      }),
     },
   };
 });
