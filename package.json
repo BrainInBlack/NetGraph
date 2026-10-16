@@ -48,6 +48,6 @@
     "vitest": "^5.0.4"
   },
   "dependencies": {
-    "lucide-static": "^1.52.0"
+    "lucide-static": "^1.55.0"
   }
 }
